@@ -1,9 +1,9 @@
-import React from 'react'
+
 
 const RecruiterLayout = () => {
   return (
     <div>
-      
+      job , createJOb ,applicants
     </div>
   )
 }
