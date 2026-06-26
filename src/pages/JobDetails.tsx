@@ -1,10 +1,12 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { jobs } from "../features/jobs/MockJobs";
 
 const JobDetails = () => {
   const { jobId } = useParams();
 
   const currentJob = jobs.find((job) => String(job.id) === String(jobId));
+
+  const handleApply = useNavigate();
 
   if (!currentJob) {
     return (
@@ -40,7 +42,7 @@ const JobDetails = () => {
       </div>
 
       <div>
-        <button>Apply here</button>
+        <button onClick={()=>handleApply("/application")}>Apply here</button>
       </div>
     </div>
   );
