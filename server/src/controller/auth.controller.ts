@@ -18,12 +18,12 @@ export const register = async (req: Request, res: Response) => {
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if (!newUser.email || !emailRegex.test(newUser.email)) {
+    if (!normalizedEmail || !emailRegex.test(normalizedEmail)) {
       return res.status(400).json({ error: "Invalid email format." });
     }
 
     const userExists = await User.exists({
-      email: newUser.email.toLowerCase(),
+      email: normalizedEmail,
     });
 
     if (userExists) {
@@ -32,9 +32,9 @@ export const register = async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(newUser.password , 10);
 
-    const saveUser = await User.create({
+    await User.create({
       name: newUser.name,
-      email: newUser.email,
+      email: normalizedEmail,
       password: hashedPassword,
       role: newUser.role,
     });
@@ -53,12 +53,18 @@ export const login = async (req: Request, res: Response) => {
   try {
     const { email, password }:{email:string,password:string} = req.body;
 
-    const normalizedEmail:string = email.toLowerCase();
+    if (!email || !password){
+      return res.status(400).json({
+        message:"Required fields missing",
+      })
+    }
+
+    const normalizedEmail = email.toLowerCase();
     const user = await User.findOne({
-      normalizedEmail
+      email:normalizedEmail
     })
     if(!user){
-      return res.status(404).json({
+      return res.status(401).json({
         message: "Invalid email or password",
       })
     }
