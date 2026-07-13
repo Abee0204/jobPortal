@@ -5,9 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
-}
+  provider = "prisma-client-js"
+ }
 
 datasource db {
   provider = "mysql"
@@ -24,7 +23,7 @@ model User{
   id   Int   @id @default(autoincrement())
 
   name String
-  mail String @unique
+  email String @unique
   password String 
 
   contact String? @unique
