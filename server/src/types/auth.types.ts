@@ -10,6 +10,8 @@ export interface LoginBody {
     password: string;
 }
 
-// export interface JwtPayload {
-//   userId: string;
-// }
+export interface JwtPayload {
+  userId: number;
+  email: string;
+  role: "candidate" | "recruiter";
+}

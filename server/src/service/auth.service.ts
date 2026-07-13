@@ -67,3 +67,17 @@ export const loginUser = async(
     user:safeUser,
   };
 }
+
+export const getCurrentUser = async (userId: number) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const { password :_ , ...safeUser } = user;
+
+  return safeUser;
+};

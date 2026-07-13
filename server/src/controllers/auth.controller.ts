@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { RegisterBody, LoginBody } from "../types/auth.types.js";
+import type { RegisterBody, LoginBody, JwtPayload } from "../types/auth.types.js";
 import { loginUser, registerUser } from "../service/auth.service.js";
 
 
@@ -68,13 +68,31 @@ export const login = async (req:Request , res:Response)=>{
     }
 }
 
-export const getCurrentUser = async (req:Request , res:Response)=>{
-    try{
+import { getCurrentUser as getCurrentUserService } from "../service/auth.service.js";
 
-    }catch(error){
-        console.error("Failed to fetch info:", error);
-    return res.status(500).json({
-      error: "Internal server error",
+export const getCurrentUser = async (req: Request, res: Response) => {
+  try {
+    const user = await getCurrentUserService(
+      req.user.userId
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        user,
+      },
     });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(404).json({
+        success: false,
+        message: error.message,
+      });
     }
-}
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
