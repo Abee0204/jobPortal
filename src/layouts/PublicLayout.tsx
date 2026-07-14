@@ -6,8 +6,12 @@ import Footer from '../components/common/Footer'
 const PublicLayout = () => {
   return (
     <div>
-      <Navbar/>
+      <header className="top-navbar">
+        <Navbar />
+      </header>
+
       <Outlet/>
+      
       <Footer/>
     </div>
   )

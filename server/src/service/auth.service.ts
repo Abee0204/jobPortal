@@ -32,7 +32,16 @@ export const registerUser = async(
 
    const { password: _, ...safeUser } = user;
 
-   return safeUser;
+   const token = generateToken(
+    safeUser.id,
+    safeUser.email,
+    safeUser.role,
+   )
+
+   return {
+    token,
+    user:safeUser,
+   };
 }
 
 export const loginUser = async(

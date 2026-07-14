@@ -1,12 +1,13 @@
 import type { Request, Response } from "express";
 import type { RegisterBody, LoginBody, JwtPayload } from "../types/auth.types.js";
 import { loginUser, registerUser } from "../service/auth.service.js";
+import { getCurrentUser as getCurrentUserService } from "../service/auth.service.js";
 
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const {name , email , password , role} :RegisterBody = req.body;
-    const safeUser = await registerUser(
+    const { name , email , password , role } :RegisterBody = req.body;
+    const { token , user:safeUser } = await registerUser(
         name,
         email,
         password,
@@ -15,6 +16,7 @@ export const register = async (req: Request, res: Response) => {
     return res.status(201).json({
       success: true,
       message: "Registered Successfully",
+      token,
       data:{
         user: safeUser
       },
@@ -67,8 +69,6 @@ export const login = async (req:Request , res:Response)=>{
   });
     }
 }
-
-import { getCurrentUser as getCurrentUserService } from "../service/auth.service.js";
 
 export const getCurrentUser = async (req: Request, res: Response) => {
   try {
