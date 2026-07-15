@@ -2,16 +2,15 @@ import { Link, Outlet } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import { useEffect } from "react";
 import { authService } from "@/services/auth.service";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
 const DashboardLayout = () => {
-  useEffect(() => {
-  const fetchUser = async () => {
-    const user = await authService.getCurrentUser();
-    console.log(user);
-  };
+  const { data, isLoading, isError } = useCurrentUser();
+  console.log(data);
 
-  fetchUser();
-}, []);
+  if (isLoading) return <h1>Loading...</h1>;
+
+  if (isError) return <h1>Something went wrong</h1>;
 
   return (
     <>

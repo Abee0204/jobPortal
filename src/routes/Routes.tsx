@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-import PublicLayout from "../layouts/PublicLayout";
 import {
   ApplicantsPage,
   Application,
@@ -13,8 +12,11 @@ import {
   RecruiterJob,
   RegisterPage,
 } from "../handleImport/pagesImport";
+import PublicLayout from "../layouts/PublicLayout";
 import DashboardLayout from "../layouts/DashboardLayout";
 import RecruiterLayout from "../layouts/RecruiterLayout";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import PublicRoute from "@/components/PublicRoute";
 
 export const router = createBrowserRouter([
   {
@@ -23,16 +25,26 @@ export const router = createBrowserRouter([
       { path: "/", element: <LandingPage /> },
       { path: "/jobs", element: <JobsPage /> },
       { path: "/jobs/:jobId", element: <JobDetails /> },
-      { path: "/login", element: <LoginPage /> },
-      { path: "/register", element: <RegisterPage /> },
+      {
+        element: <PublicRoute />,
+        children: [
+          { path: "/login", element: <LoginPage /> },
+          { path: "/register", element: <RegisterPage /> },
+        ],
+      },
     ],
   },
   {
-    element: <DashboardLayout />,
+    element: <ProtectedRoute />,
     children: [
-      { path: "/dashboard", element: <DashboardPage /> },
-      { path: "/application", element: <Application /> },
-      { path: "/profile", element: <Profile /> },
+      {
+        element: <DashboardLayout />,
+        children: [
+          { path: "/dashboard", element: <DashboardPage /> },
+          { path: "/application", element: <Application /> },
+          { path: "/profile", element: <Profile /> },
+        ],
+      },
     ],
   },
   {
