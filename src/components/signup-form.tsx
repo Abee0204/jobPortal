@@ -23,13 +23,16 @@ import { Input } from "@/components/ui/input";
 import { NavLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { authService } from "@/services/auth.service";
+
 import { useNavigate } from "react-router-dom";
 
 import {
   registerSchema,
   type RegisterFormData,
 } from "@/features/auth/schemas/register.schema";
+import { setToken } from "@/utils/token";
+import { useRegister } from "@/features/auth/hooks/useRegister";
+
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const form = useForm<RegisterFormData>({
@@ -44,17 +47,18 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   });
 
   const navigate = useNavigate();
-
-  const onSubmit = async (data: RegisterFormData) => {
-    try {
-      const response = await authService.register(data);
-      console.log(response);
-      localStorage.setItem("token", response.token);
+  const signUpMutation = useRegister();
+  const onSubmit =  (data: RegisterFormData) => {
+   signUpMutation.mutate(data ,{
+    onSuccess:(response) => {
+      setToken(response.token);
       form.reset();
       navigate("/dashboard");
-    } catch (error) {
-      console.error(error);
-    }
+    },
+    onError:(error)=>{
+      console.log(error);
+    },
+   })
   };
 
   return (

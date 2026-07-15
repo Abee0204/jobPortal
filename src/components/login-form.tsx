@@ -22,6 +22,8 @@ import {
 } from "@/features/auth/schemas/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "@/services/auth.service";
+import { setToken } from "@/utils/token";
+import { useLogin } from "@/features/auth/hooks/useLogin";
 
 export function LoginForm({
   className,
@@ -36,17 +38,19 @@ export function LoginForm({
   });
 
   const navigate = useNavigate();
-
-  const onSubmit = async (data: LoginFormData) => {
-    try {
-      const response = await authService.login(data);
-      console.log(response);
-      localStorage.setItem("token", response.token);
-      form.reset();
-      navigate("/dashboard");
-    } catch (error) {
-      console.error(error);
-    }
+  const loginMutation = useLogin();
+  const onSubmit =  (data: LoginFormData) => {
+      loginMutation.mutate(data, {
+        onSuccess: (response) => {
+          setToken(response.token);
+          form.reset();
+          navigate("/dashboard");
+        },
+        
+        onError: (error) =>{
+          console.log(error);
+        },
+      });    
   };
 
   return (

@@ -1,7 +1,18 @@
 import { Link, Outlet } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
+import { useEffect } from "react";
+import { authService } from "@/services/auth.service";
 
 const DashboardLayout = () => {
+  useEffect(() => {
+  const fetchUser = async () => {
+    const user = await authService.getCurrentUser();
+    console.log(user);
+  };
+
+  fetchUser();
+}, []);
+
   return (
     <>
       <header className="top-navbar">
