@@ -32,7 +32,8 @@ import {
 } from "@/features/auth/schemas/register.schema";
 import { setToken } from "@/utils/token";
 import { useRegister } from "@/features/auth/hooks/useRegister";
-
+import { toast } from "sonner";
+import axios from "axios";
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const form = useForm<RegisterFormData>({
@@ -48,17 +49,24 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
   const navigate = useNavigate();
   const signUpMutation = useRegister();
-  const onSubmit =  (data: RegisterFormData) => {
-   signUpMutation.mutate(data ,{
-    onSuccess:(response) => {
-      setToken(response.token);
-      form.reset();
-      navigate("/dashboard");
-    },
-    onError:(error)=>{
-      console.log(error);
-    },
-   })
+  const onSubmit = (data: RegisterFormData) => {
+    signUpMutation.mutate(data, {
+      onSuccess: (response) => {
+        setToken(response.token);
+        form.reset();
+        toast.success("Registration successful");
+        navigate("/dashboard");
+      },
+      onError: (error) =>{
+        
+          if(axios.isAxiosError(error)) {
+            toast.error(
+              error.response?.data?.message ?? "Something went wrong"
+            );
+            return;
+          }
+        },
+    });
   };
 
   return (
@@ -154,8 +162,10 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             </Field>
 
             <Field>
-              <Button type="submit" className="w-full">
-                Create Account
+              <Button type="submit" disabled={signUpMutation.isPending}>
+                {signUpMutation.isPending
+                  ? "Creating Account..."
+                  : "Create Account"}
               </Button>
 
               <FieldDescription className="px-6 text-center mt-4">

@@ -22,12 +22,12 @@ export const router = createBrowserRouter([
   {
     element: <PublicLayout />,
     children: [
-      { path: "/", element: <LandingPage /> },
       { path: "/jobs", element: <JobsPage /> },
       { path: "/jobs/:jobId", element: <JobDetails /> },
       {
         element: <PublicRoute />,
         children: [
+          { path: "/", element: <LandingPage /> },
           { path: "/login", element: <LoginPage /> },
           { path: "/register", element: <RegisterPage /> },
         ],

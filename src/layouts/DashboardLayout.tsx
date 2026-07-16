@@ -1,7 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
-import { useEffect } from "react";
-import { authService } from "@/services/auth.service";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
 const DashboardLayout = () => {
@@ -21,7 +19,7 @@ const DashboardLayout = () => {
       <div className="left-sidebar">
         <Link to={"/dashboard"}>Dashboard</Link>
 
-        <Link to={"/applications"}>Applications</Link>
+        <Link to={"/application"}>Applications</Link>
 
         <Link to={"/profile"}>Profile</Link>
       </div>

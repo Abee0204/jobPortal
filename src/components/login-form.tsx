@@ -21,9 +21,10 @@ import {
   loginSchema,
 } from "@/features/auth/schemas/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { authService } from "@/services/auth.service";
 import { setToken } from "@/utils/token";
 import { useLogin } from "@/features/auth/hooks/useLogin";
+import { toast } from "sonner";
+import axios from "axios";
 
 export function LoginForm({
   className,
@@ -44,11 +45,17 @@ export function LoginForm({
         onSuccess: (response) => {
           setToken(response.token);
           form.reset();
+          toast.success("Login successful");
           navigate("/dashboard");
         },
         
         onError: (error) =>{
-          console.log(error);
+          if(axios.isAxiosError(error)) {
+            toast.error(
+              error.response?.data?.message ?? "Something went wrong"
+            );
+            return;
+          }
         },
       });    
   };
@@ -98,7 +105,9 @@ export function LoginForm({
                 </p>
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled ={loginMutation.isPending}>
+                  {loginMutation.isPending ? "Logging in...." : "Login"}
+                </Button>
                 {/* <Button variant="outline" type="button">
                   Login with Google
                 </Button> */}

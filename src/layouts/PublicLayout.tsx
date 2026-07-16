@@ -6,7 +6,7 @@ import Footer from '../components/common/Footer'
 const PublicLayout = () => {
   return (
     <div>
-      <header className="top-navbar">
+      <header className="top-navbar ">
         <Navbar />
       </header>
 
