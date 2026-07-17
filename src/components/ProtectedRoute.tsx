@@ -1,4 +1,5 @@
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import FullScreenLoader from "@/pages/FullScreenLoader";
 import { getToken, removeToken } from "@/utils/token"
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -15,7 +16,7 @@ const ProtectedRoute = () => {
     
     if(isLoading)
     {
-        return <h1>Loading hori hai bhai abhi rukja</h1>;
+        return <FullScreenLoader/>;
     }
     if(isError)
     {

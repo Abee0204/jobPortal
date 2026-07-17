@@ -47,12 +47,14 @@ const Navbar = () => {
   const handleLogout = () => {
     removeToken();
 
-    queryClient.removeQueries({
-      queryKey: ["currentUser"],
+    queryClient.setQueryData(["currentUser"], null);
+
+    toast.success("Logged out successfully", {
+      position: 'top-center',
     });
 
     navigate("/login");
-    toast.success("Logged out successfully");
+    
   };
 
   if (isLoading) return null;

@@ -54,18 +54,19 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       onSuccess: (response) => {
         setToken(response.token);
         form.reset();
-        toast.success("Registration successful");
+        toast.success("Registration successful", {
+          position: "top-center",
+        });
         navigate("/dashboard");
       },
-      onError: (error) =>{
-        
-          if(axios.isAxiosError(error)) {
-            toast.error(
-              error.response?.data?.message ?? "Something went wrong"
-            );
-            return;
-          }
-        },
+      onError: (error) => {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data?.message ?? "Something went wrong", {
+            position: "top-center",
+          });
+          return;
+        }
+      },
     });
   };
 

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { NavLink } from "react-router-dom";
 
 
 const LandingPage = () => {
@@ -27,13 +28,16 @@ const LandingPage = () => {
 
           {/* Buttons */}
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <NavLink to={"/register"}>
             <Button
               size="lg"
               className="rounded-full bg-[#140B2D] px-8 py-6 text-white hover:bg-[#26154d]"
             >
               Get Started
             </Button>
+            </NavLink>
 
+            <NavLink to={"/jobs"}>
             <Button
               variant="outline"
               size="lg"
@@ -41,6 +45,7 @@ const LandingPage = () => {
             >
               Discover Careers
             </Button>
+            </NavLink>
           </div>
 
         </div>

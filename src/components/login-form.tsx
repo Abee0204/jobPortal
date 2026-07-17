@@ -40,24 +40,26 @@ export function LoginForm({
 
   const navigate = useNavigate();
   const loginMutation = useLogin();
-  const onSubmit =  (data: LoginFormData) => {
-      loginMutation.mutate(data, {
-        onSuccess: (response) => {
-          setToken(response.token);
-          form.reset();
-          toast.success("Login successful");
-          navigate("/dashboard");
-        },
-        
-        onError: (error) =>{
-          if(axios.isAxiosError(error)) {
-            toast.error(
-              error.response?.data?.message ?? "Something went wrong"
-            );
-            return;
-          }
-        },
-      });    
+  const onSubmit = (data: LoginFormData) => {
+    loginMutation.mutate(data, {
+      onSuccess: (response) => {
+        setToken(response.token);
+        form.reset();
+        toast.success("Login successful", {
+          position: "top-center",
+        });
+        navigate("/dashboard");
+      },
+
+      onError: (error) => {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data?.message ?? "Something went wrong", {
+            position: "top-center",
+          });
+          return;
+        }
+      },
+    });
   };
 
   return (
@@ -78,7 +80,6 @@ export function LoginForm({
                   id="email"
                   type="email"
                   placeholder="m@example.com"
-                  
                   {...form.register("email")}
                 />
                 <p className="text-sm text-red-500">
@@ -105,7 +106,7 @@ export function LoginForm({
                 </p>
               </Field>
               <Field>
-                <Button type="submit" disabled ={loginMutation.isPending}>
+                <Button type="submit" disabled={loginMutation.isPending}>
                   {loginMutation.isPending ? "Logging in...." : "Login"}
                 </Button>
                 {/* <Button variant="outline" type="button">
