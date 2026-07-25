@@ -4,16 +4,31 @@ import type {
   UpdateJobData,
 } from "../validation/job.validation.js";
 import { createjob, updatejob } from "../service/job.service.js";
+import { success } from "zod";
 
 export const createJob = async (req: Request, res: Response) => {
   try {
+
+    if(req.user.role !== "recruiter")
+    {
+      return res.status(403).json({
+        success:false,
+        message:"You are not autherized to create job",
+      })
+    }
+
     const data : CreateJobData = req.body;
     const job = await createjob(data , req.user.userId);
 
-    return res.status(201).json(job);
+    return res.status(201).json({
+      success:true,
+      data:{
+        job
+      },
+    });
   } catch (error) {
     if (error instanceof Error) {
-      return res.status(409).json({
+      return res.status(400).json({
         success: false,
         message: error.message,
       });

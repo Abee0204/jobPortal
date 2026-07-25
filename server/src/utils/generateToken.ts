@@ -1,10 +1,11 @@
+import type { Role } from "@prisma/client";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET =process.env.JWT_SECRET!;
 export const generateToken =(
     userId:number,
     email:string,
-    role:"candidate"|"recruiter",
+    role:Role,
 ):string => {
     return jwt.sign(
         {

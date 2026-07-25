@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const CreateJobSchema = z.object({
+const baseJobSchema = z.object({
   title: z.string().min(1, "Title is required"),
   company: z.string().min(1, "Company name is required"),
   description: z.string().min(30, "Description is required"),
@@ -30,7 +30,9 @@ export const CreateJobSchema = z.object({
   ]).default("FRESHER"),
 
   applicationDeadline:z.coerce.date().nullable().optional(),
-}).refine(
+});
+
+export const CreateJobSchema = baseJobSchema.refine(
     (data)=>{
         if(data.salaryMin !== undefined && data.salaryMin !== null &&
            data.salaryMax !== undefined && data.salaryMax !== null) {
@@ -46,6 +48,18 @@ export const CreateJobSchema = z.object({
 
 export type CreateJobData = z.infer<typeof CreateJobSchema>;
 
-export const UpdateJobSchema = CreateJobSchema.partial();
+export const UpdateJobSchema = baseJobSchema.partial().refine(
+    (data)=>{
+        if(data.salaryMin !== undefined && data.salaryMin !== null &&
+           data.salaryMax !== undefined && data.salaryMax !== null) {
+            return data.salaryMax >= data.salaryMin;
+           }
+        return true;
+    },
+    {
+        message:"Maximum salary must be greater than or equal to minimum salary" ,
+        path: ["salaryMax"],
+    }
+);
 
 export type UpdateJobData = z.infer<typeof UpdateJobSchema>;

@@ -1,3 +1,5 @@
+import type { Role } from "@prisma/client";
+
 export interface RegisterBody {
   name: string;
   email: string;
@@ -13,5 +15,5 @@ export interface LoginBody {
 export interface JwtPayload {
   userId: number;
   email: string;
-  role: "candidate" | "recruiter";
+  role: Role;
 }
