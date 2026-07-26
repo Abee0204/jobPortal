@@ -2,55 +2,65 @@ import prisma from "../config/prisma.js";
 import type { CreateJobData } from "../validation/job.validation.js";
 import type { Prisma } from "@prisma/client";
 
+export const createjob = async (data: CreateJobData, postedById: number) => {
+  const skills = data.skills.join(",");
 
-export const createjob = async (
-    data :CreateJobData , postedById :number
-) => {
-    const skills = data.skills.join(",");
+  const createData: Prisma.JobCreateInput = {
+    title: data.title,
+    company: data.company,
+    description: data.description,
+    location: data.location,
 
-   const createData : Prisma.JobCreateInput = {
-  title: data.title,
-  company: data.company,
-  description: data.description,
-  location: data.location,
+    employmentType: data.employmentType,
 
-  employmentType: data.employmentType,
+    skills,
 
-  skills,
+    experienceLevel: data.experienceLevel,
 
-  experienceLevel: data.experienceLevel,
+    postedBy: {
+      connect: {
+        id: postedById,
+      },
+    },
+  };
 
-  postedBy:{
-    connect:{
-        id:postedById,
-    }
-  },
-};
+  // 👇 Optional fields yahan
 
-// 👇 Optional fields yahan
+  if (data.salaryMin !== undefined) {
+    createData.salaryMin = data.salaryMin;
+  }
 
-if (data.salaryMin !== undefined) {
-  createData.salaryMin = data.salaryMin;
-}
+  if (data.salaryMax !== undefined) {
+    createData.salaryMax = data.salaryMax;
+  }
 
-if (data.salaryMax !== undefined) {
-  createData.salaryMax = data.salaryMax;
-}
+  if (data.salaryCurrency !== undefined) {
+    createData.salaryCurrency = data.salaryCurrency;
+  }
 
-if (data.salaryCurrency !== undefined) {
-  createData.salaryCurrency = data.salaryCurrency;
-}
+  if (data.applicationDeadline !== undefined) {
+    createData.applicationDeadline = data.applicationDeadline;
+  }
 
-if (data.applicationDeadline !== undefined) {
-  createData.applicationDeadline = data.applicationDeadline;
-}
+  const job = await prisma.job.create({
+    data: createData,
+  });
 
-const job = await prisma.job.create({
-  data: createData,
-});
-    
-
-    return job;
+  return job;
 };
 
 export const updatejob = async () => {};
+
+export const getAlljob = async () => {
+  const jobs = await prisma.job.findMany({
+    where: {
+      isActive: true,
+    },
+
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return jobs;
+};

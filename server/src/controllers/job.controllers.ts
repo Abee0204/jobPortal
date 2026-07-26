@@ -3,8 +3,9 @@ import type {
   CreateJobData,
   UpdateJobData,
 } from "../validation/job.validation.js";
-import { createjob, updatejob } from "../service/job.service.js";
+import { createjob, updatejob , getAlljob } from "../service/job.service.js";
 import { success } from "zod";
+
 
 export const createJob = async (req: Request, res: Response) => {
   try {
@@ -44,4 +45,23 @@ export const createJob = async (req: Request, res: Response) => {
 export const updateJob = async (req: Request, res: Response) => {
   try {
   } catch (error) {}
+};
+
+export const getAllJob =async(req:Request , res:Response)=>{
+  try {
+    const jobs = await getAlljob();
+
+    return res.status(200).json({
+      success:true,
+      data:{
+        jobs,
+      },
+    })
+  } catch (error) {
+    
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
 };

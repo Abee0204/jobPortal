@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createJob , updateJob } from "../controllers/job.controllers.js";
+import { createJob , getAllJob, updateJob } from "../controllers/job.controllers.js";
 
 import { CreateJobSchema , UpdateJobSchema } from "../validation/job.validation.js";
 import { validate } from "../middleware/validate.middleware.js";
@@ -9,6 +9,8 @@ import { protect } from "../middleware/auth.middleware.js";
 const router = Router();
 
 router.post("/" ,protect,authorize(Role.recruiter),validate(CreateJobSchema) , createJob);
-router.patch("/:id",validate(UpdateJobSchema) , updateJob);
+router.patch("/:id",protect,authorize(Role.recruiter),validate(UpdateJobSchema) , updateJob);
+
+router.get("/",getAllJob)
 
 export default router
