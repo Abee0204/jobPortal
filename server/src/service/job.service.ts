@@ -51,7 +51,7 @@ export const createjob = async (data: CreateJobData, postedById: number) => {
 
 export const updatejob = async () => {};
 
-export const getAlljob = async () => {
+export const findAllJob = async () => {
   const jobs = await prisma.job.findMany({
     where: {
       isActive: true,
@@ -64,3 +64,13 @@ export const getAlljob = async () => {
 
   return jobs;
 };
+
+export const findJobById = async (jobId:string) =>{
+  const jobInfo = await prisma.job.findUnique({
+    where:{
+      id:jobId,
+    }
+  });
+
+  return jobInfo;
+}
