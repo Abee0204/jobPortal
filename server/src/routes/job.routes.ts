@@ -9,7 +9,7 @@ import { protect } from "../middleware/auth.middleware.js";
 const router = Router();
 
 router.post("/" ,protect,authorize(Role.recruiter),validate(CreateJobSchema) , createJob);
-router.patch("/:id",protect,authorize(Role.recruiter),validate(UpdateJobSchema) , updateJob);
+router.patch("/:jobId",protect,authorize(Role.recruiter),validate(UpdateJobSchema) , updateJob);
 
 router.get("/",getAllJobs);
 router.get("/:jobId",getJobById);
