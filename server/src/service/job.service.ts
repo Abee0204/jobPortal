@@ -1,5 +1,8 @@
 import prisma from "../config/prisma.js";
-import type { CreateJobData, UpdateJobData } from "../validation/job.validation.js";
+import type {
+  CreateJobData,
+  UpdateJobData,
+} from "../validation/job.validation.js";
 import type { Prisma } from "@prisma/client";
 
 export const createjob = async (data: CreateJobData, postedById: number) => {
@@ -49,63 +52,68 @@ export const createjob = async (data: CreateJobData, postedById: number) => {
   return job;
 };
 
-export const updatejob = async (data: UpdateJobData, recruiterId: number , jobId:string) => {
+export const updatejob = async (
+  data: UpdateJobData,
+  recruiterId: number,
+  jobId: string,
+) => {
   const job = await prisma.job.findUnique({
-  where: {
-    id:jobId,
-  },
-});
+    where: {
+      id: jobId,
+    },
+  });
 
-if (!job) {
+  if (!job) {
     throw new Error("Job not found");
-}
+  }
 
-if (job.postedById !== recruiterId) {
+  if (job.postedById !== recruiterId) {
     throw new Error("You are not allowed to update this job");
-}
+  }
 
-const updateData : Prisma.JobUpdateInput = {
-  ...(data.title !== undefined && { title: data.title }),
-  ...(data.company !== undefined && { company: data.company }),
-  ...(data.description !== undefined && { description: data.description }),
-  ...(data.location !== undefined && { location: data.location }),
+  const updateData: Prisma.JobUpdateInput = {
+    ...(data.title !== undefined && { title: data.title }),
+    ...(data.company !== undefined && { company: data.company }),
+    ...(data.description !== undefined && { description: data.description }),
+    ...(data.location !== undefined && { location: data.location }),
 
-  ...(data.employmentType !== undefined && {
-    employmentType: data.employmentType,
-  }),
+    ...(data.employmentType !== undefined && {
+      employmentType: data.employmentType,
+    }),
 
-  ...(data.salaryMin !== undefined && {
-    salaryMin: data.salaryMin,}),
+    ...(data.salaryMin !== undefined && {
+      salaryMin: data.salaryMin,
+    }),
 
-  ...(data.salaryMax !== undefined && {
-    salaryMax: data.salaryMax,
-  }),
+    ...(data.salaryMax !== undefined && {
+      salaryMax: data.salaryMax,
+    }),
 
-  ...(data.salaryCurrency !== undefined && {
-    salaryCurrency: data.salaryCurrency,
-  }),
+    ...(data.salaryCurrency !== undefined && {
+      salaryCurrency: data.salaryCurrency,
+    }),
 
-  ...(data.experienceLevel !== undefined && {
-    experienceLevel: data.experienceLevel,
-  }),
+    ...(data.experienceLevel !== undefined && {
+      experienceLevel: data.experienceLevel,
+    }),
 
-  ...(data.applicationDeadline !== undefined && {
-    applicationDeadline: data.applicationDeadline,
-  }),
+    ...(data.applicationDeadline !== undefined && {
+      applicationDeadline: data.applicationDeadline,
+    }),
 
-  ...(data.skills !== undefined && {
-    skills: data.skills.join(","),
-  }),
-};
+    ...(data.skills !== undefined && {
+      skills: data.skills.join(","),
+    }),
+  };
 
-const updatedJob = await prisma.job.update({
-  where: {
-    id: jobId,
-  },
-  data: updateData,
-});
+  const updatedJob = await prisma.job.update({
+    where: {
+      id: jobId,
+    },
+    data: updateData,
+  });
 
-return updatedJob;
+  return updatedJob;
 };
 
 export const findAllJob = async () => {
@@ -122,12 +130,40 @@ export const findAllJob = async () => {
   return jobs;
 };
 
-export const findJobById = async (jobId:string) =>{
+export const findJobById = async (jobId: string) => {
   const jobInfo = await prisma.job.findUnique({
-    where:{
-      id:jobId,
-    }
+    where: {
+      id: jobId,
+    },
   });
 
   return jobInfo;
-}
+};
+
+export const setJobNotActive = async (jobId: string, recruiterId: number) => {
+  const job = await prisma.job.findFirst({
+    where: {
+      id: jobId,
+      isActive: true,
+    },
+  });
+
+  if (!job) {
+    throw new Error("Job not found");
+  }
+
+  if (job.postedById !== recruiterId) {
+    throw new Error("You are not allowed to update this job");
+  }
+  
+  const notActiveJob = await prisma.job.update({
+    where: {
+      id: jobId,
+    },
+    data:{
+      isActive:false,
+    }
+  });
+
+  return notActiveJob;
+};

@@ -8,6 +8,7 @@ import {
   updatejob,
   findAllJob,
   findJobById,
+  setJobNotActive,
 } from "../service/job.service.js";
 
 export const createJob = async (req: Request, res: Response) => {
@@ -133,3 +134,10 @@ export const getJobById = async (req: Request<JobParams>, res: Response) => {
     });
   }
 };
+
+export const deleteJobById = async(req: Request<JobParams>,res: Response) => {
+  const jobId = req.params.jobId;
+  const userId = req.user.userId;
+
+  const job = await setJobNotActive(jobId , userId);
+}

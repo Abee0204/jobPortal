@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createJob , getAllJobs, getJobById, updateJob } from "../controllers/job.controllers.js";
+import { createJob , deleteJobById, getAllJobs, getJobById, updateJob } from "../controllers/job.controllers.js";
 
 import { CreateJobSchema , UpdateJobSchema } from "../validation/job.validation.js";
 import { validate } from "../middleware/validate.middleware.js";
@@ -13,5 +13,7 @@ router.patch("/:jobId",protect,authorize(Role.recruiter),validate(UpdateJobSchem
 
 router.get("/",getAllJobs);
 router.get("/:jobId",getJobById);
+
+router.delete("/:jobId",protect,authorize(Role.recruiter),deleteJobById)
 
 export default router
