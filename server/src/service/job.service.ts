@@ -167,3 +167,16 @@ export const setJobNotActive = async (jobId: string, recruiterId: number) => {
 
   return notActiveJob;
 };
+
+export const findMyJobs = async(recruiterId:number) => {
+  const jobs = await prisma.job.findMany({
+    where:{
+      postedById:recruiterId,
+      isActive:true,
+    },
+    orderBy:{
+      createdAt:"desc",
+    },
+  });
+  return jobs;
+}
