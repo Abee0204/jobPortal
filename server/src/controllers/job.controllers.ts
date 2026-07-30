@@ -10,6 +10,7 @@ import {
   findJobById,
   setJobNotActive,
   findMyJobs,
+  applyForJobService,
 } from "../service/job.service.js";
 
 export const createJob = async (req: Request, res: Response) => {
@@ -164,19 +165,19 @@ export const deleteJobById = async (req: Request<JobParams>, res: Response) => {
   }
 };
 
-export const getAllMyJobs = async (req: Request , res: Response) => {
+export const getAllMyJobs = async (req: Request, res: Response) => {
   try {
     const recruiterId = req.user.userId;
     const myJobs = findMyJobs(recruiterId);
 
     return res.status(200).json({
-    success: true,
-    data: {
+      success: true,
+      data: {
         myJobs,
-    },
-});
+      },
+    });
   } catch (error) {
-     if (error instanceof Error) {
+    if (error instanceof Error) {
       return res.status(400).json({
         success: false,
         message: error.message,
@@ -188,4 +189,32 @@ export const getAllMyJobs = async (req: Request , res: Response) => {
       message: "Internal server error",
     });
   }
-}
+};
+
+export const applyForJob = async (req: Request<JobParams>, res: Response) => {
+  try {
+    const jobId = req.params.jobId;
+    const candidateId = req.user.userId;
+
+    const application = await applyForJobService(jobId, candidateId);
+
+    return res.status(201).json({
+      message: "Applied successfully",
+      data: {
+        application,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};

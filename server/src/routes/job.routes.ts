@@ -17,4 +17,6 @@ router.get("/my-jobs",protect,authorize(Role.recruiter),getAllMyJobs);
 
 router.delete("/:jobId",protect,authorize(Role.recruiter),deleteJobById);
 
+router.post("/:jobId/apply",protect,authorize(Role.candidate),)
+
 export default router

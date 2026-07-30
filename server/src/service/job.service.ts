@@ -155,28 +155,57 @@ export const setJobNotActive = async (jobId: string, recruiterId: number) => {
   if (job.postedById !== recruiterId) {
     throw new Error("You are not allowed to update this job");
   }
-  
+
   const notActiveJob = await prisma.job.update({
     where: {
       id: jobId,
     },
-    data:{
-      isActive:false,
-    }
+    data: {
+      isActive: false,
+    },
   });
 
   return notActiveJob;
 };
 
-export const findMyJobs = async(recruiterId:number) => {
+export const findMyJobs = async (recruiterId: number) => {
   const jobs = await prisma.job.findMany({
-    where:{
-      postedById:recruiterId,
-      isActive:true,
+    where: {
+      postedById: recruiterId,
+      isActive: true,
     },
-    orderBy:{
-      createdAt:"desc",
+    orderBy: {
+      createdAt: "desc",
     },
   });
   return jobs;
-}
+};
+
+export const applyForJobService = async (
+  jobId: string,
+  candidateId: number,
+) => {
+  const job = await findJobById(jobId);
+  if (!job || !job.isActive) throw new Error("Job not found");
+
+  const existingApplication = await prisma.application.findUnique({
+    where: {
+      userId_jobId: {
+        userId: candidateId,
+        jobId,
+      },
+    },
+  });
+
+  if (existingApplication)
+    throw new Error("You have already applied for this job");
+
+  const newApplication = await prisma.application.create({
+    data: {
+      userId: candidateId,
+      jobId,
+    },
+  });
+
+  return newApplication ;
+};
