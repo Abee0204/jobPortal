@@ -1,5 +1,5 @@
 import prisma from "../config/prisma.js";
-import type { Prisma } from "@prisma/client";
+import type { ApplicationStatus, Prisma } from "@prisma/client";
 import { findJobById } from "./job.service.js";
 
 export const applyForJobService = async (
@@ -85,3 +85,39 @@ export const getMyApplicationService = async (candidateId: number) => {
 
 };
 
+export const updateApplicationStatusService = async(applicationId: number , recruiterId: number , status: ApplicationStatus) =>{
+  const application = await prisma.application.findUnique({
+    where:{
+      id:applicationId,
+    },
+    include:{
+      job:{
+        select:{
+          postedById:true,
+        }
+      },
+    }
+  });
+
+  if(!application)
+    throw new Error("Application doesn't exist");
+
+  if(application.job.postedById !== recruiterId)
+    throw new Error("You are not authorized");
+
+  if (application.status === status) {
+  throw new Error(`Application is already ${status}`);
+}
+
+  const updatedApplication = await prisma.application.update({
+    where:{
+      id:applicationId,
+    },
+    data:{
+      status,
+    },
+  });
+
+  return updatedApplication;
+  
+}
