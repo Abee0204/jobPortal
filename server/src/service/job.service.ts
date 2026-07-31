@@ -181,31 +181,4 @@ export const findMyJobs = async (recruiterId: number) => {
   return jobs;
 };
 
-export const applyForJobService = async (
-  jobId: string,
-  candidateId: number,
-) => {
-  const job = await findJobById(jobId);
-  if (!job || !job.isActive) throw new Error("Job not found");
 
-  const existingApplication = await prisma.application.findUnique({
-    where: {
-      userId_jobId: {
-        userId: candidateId,
-        jobId,
-      },
-    },
-  });
-
-  if (existingApplication)
-    throw new Error("You have already applied for this job");
-
-  const newApplication = await prisma.application.create({
-    data: {
-      userId: candidateId,
-      jobId,
-    },
-  });
-
-  return newApplication ;
-};

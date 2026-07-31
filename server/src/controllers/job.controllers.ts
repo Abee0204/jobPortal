@@ -10,8 +10,7 @@ import {
   findJobById,
   setJobNotActive,
   findMyJobs,
-  applyForJobService,
-} from "../service/job.service.js";
+ } from "../service/job.service.js";
 
 export const createJob = async (req: Request, res: Response) => {
   try {
@@ -191,30 +190,4 @@ export const getAllMyJobs = async (req: Request, res: Response) => {
   }
 };
 
-export const applyForJob = async (req: Request<JobParams>, res: Response) => {
-  try {
-    const jobId = req.params.jobId;
-    const candidateId = req.user.userId;
 
-    const application = await applyForJobService(jobId, candidateId);
-
-    return res.status(201).json({
-      message: "Applied successfully",
-      data: {
-        application,
-      },
-    });
-  } catch (error) {
-    if (error instanceof Error) {
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
-
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-};
