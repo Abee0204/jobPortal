@@ -167,7 +167,7 @@ export const deleteJobById = async (req: Request<JobParams>, res: Response) => {
 export const getAllMyJobs = async (req: Request, res: Response) => {
   try {
     const recruiterId = req.user.userId;
-    const myJobs = findMyJobs(recruiterId);
+    const myJobs = await findMyJobs(recruiterId);
 
     return res.status(200).json({
       success: true,

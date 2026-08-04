@@ -53,7 +53,7 @@ export function LoginForm({
 
       onError: (error) => {
         if (axios.isAxiosError(error)) {
-          toast.error(error.response?.data?.message ?? "Something went wrong", {
+          toast.error( "Something went wrong", {
             position: "top-center",
           });
           return;

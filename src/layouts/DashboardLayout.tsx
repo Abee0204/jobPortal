@@ -1,12 +1,13 @@
 import { Link, Outlet } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import FullScreenLoader from "@/pages/FullScreenLoader";
 
 const DashboardLayout = () => {
   const { data, isLoading, isError } = useCurrentUser();
   console.log(data);
 
-  if (isLoading) return <h1>Loading...</h1>;
+  if (isLoading) return <FullScreenLoader/>;
 
   if (isError) return <h1>Something went wrong</h1>;
 

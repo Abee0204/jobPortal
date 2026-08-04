@@ -1,4 +1,4 @@
-import { success, z, type ZodType } from "zod";
+import { type ZodType } from "zod";
 import type { Request , Response , NextFunction } from "express";
 
 export const validate = <T>(schema:ZodType<T>) => (req:Request, res:Response , next:NextFunction)=>{
