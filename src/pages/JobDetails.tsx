@@ -1,6 +1,7 @@
 import { useJob } from "@/hooks/useJob";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import FullScreenLoader from "./FullScreenLoader";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
 const JobDetails = () => {
   const { jobId } = useParams();
@@ -11,6 +12,7 @@ const JobDetails = () => {
 
   const {data:job , isLoading , isError} = useJob(jobId);
 
+  const {data:user} = useCurrentUser();
 
   const navigate = useNavigate();
 
@@ -58,9 +60,22 @@ const JobDetails = () => {
         <p className="text-gray-700 mt-2 leading-relaxed">{job.description}</p>
       </div>
 
-      <div>
-        <button className="border rounded shadow-md ml-60" onClick={() => navigate("/application")}>Apply here</button>
-      </div>
+      
+     <div>
+  {!user && (
+    <button onClick={() => navigate("/login")}>
+      Login to Apply
+    </button>
+  )}
+
+  {user?.role === "candidate" && (
+    <button className="border rounded shadow-md ml-60" onClick={() => navigate("/application")}>Apply Now</button>
+  )}
+
+  {user?.role === "recruiter" && (
+    <button className="border rounded shadow-md ml-60" onClick={() => navigate("/")}> Edit Job</button>
+  )}
+</div>
     </div>
   );
 };

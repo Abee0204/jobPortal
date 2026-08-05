@@ -18,5 +18,5 @@ export const jobService = {
         const response = await api.get("/jobs/my-jobs");
 
         return response.data.data.myJobs;
-    }
+    },
 };

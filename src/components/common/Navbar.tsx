@@ -9,6 +9,9 @@ import { toast } from "sonner";
 const Navbar = () => {
   const { data: user, isLoading } = useCurrentUser();
 
+  const isCandidate = user?.role === "candidate";
+  const isRecruiter = user?.role === "recruiter";
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -50,11 +53,10 @@ const Navbar = () => {
     queryClient.setQueryData(["currentUser"], null);
 
     toast.success("Logged out successfully", {
-      position: 'top-center',
+      position: "top-center",
     });
 
     navigate("/login");
-    
   };
 
   if (isLoading) return null;
@@ -69,9 +71,7 @@ const Navbar = () => {
   return (
     <header
       className={`fixed inset-x-0 top-4 z-50 flex justify-center transition-all duration-300 ${
-        visible
-          ? "translate-y-0 opacity-100"
-          : "-translate-y-full opacity-0"
+        visible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
       }`}
     >
       <nav className="mx-4 flex w-full max-w-6xl items-center justify-between rounded-full bg-white/90 px-8 py-4 shadow-xl backdrop-blur-md">
@@ -85,15 +85,28 @@ const Navbar = () => {
 
         {/* Navigation */}
         <div className="flex items-center gap-8">
-          <NavLink to="/jobs" className={navLinkClass}>
-            Jobs
-          </NavLink>
-
           {user ? (
             <>
-              <NavLink to="/dashboard" className={navLinkClass}>
-                Dashboard
-              </NavLink>
+              {isCandidate && (
+                <>
+                  <NavLink to="/jobs" className={navLinkClass}>
+                    Jobs
+                  </NavLink>
+                  <NavLink to={"/Application"} className={navLinkClass}>
+                    My Applications
+                  </NavLink>
+                </>
+              )}
+              {isRecruiter && (
+                <>
+                  <NavLink to="/jobs" className={navLinkClass}>
+                    My Jobs
+                  </NavLink>
+                  <NavLink to="/recruiter/jobs/new" className={navLinkClass}>
+                    Create Job
+                  </NavLink>
+                </>
+              )}
 
               <NavLink to="/profile" className={navLinkClass}>
                 Profile
@@ -108,15 +121,19 @@ const Navbar = () => {
             </>
           ) : (
             <>
+              <NavLink to="/jobs" className={navLinkClass}>
+                Jobs
+              </NavLink>
+
               <NavLink to="/login" className={navLinkClass}>
                 Login
               </NavLink>
 
               <NavLink to="/register">
-  <Button className="rounded-full bg-[#140B2D] px-6 hover:bg-[#26154D]">
-    Get Started
-  </Button>
-</NavLink>
+                <Button className="rounded-full bg-[#140B2D] px-6 hover:bg-[#26154D]">
+                  Get Started
+                </Button>
+              </NavLink>
             </>
           )}
         </div>
