@@ -27,6 +27,10 @@ const JobDetails = () => {
     );
   }
 
+  if (!job) {
+  return <h1>Job not found</h1>;
+}
+
   return (
     <div className="p-6 max-w-2xl mx-auto border rounded-xl shadow-md mt-40">
       <Link to="/jobs" className="text-sm text-gray-500 hover:underline">
@@ -34,23 +38,28 @@ const JobDetails = () => {
       </Link>
 
       <h1 className="text-3xl font-bold mt-4">{job?.title}</h1>
-      <p className="text-xl text-gray-600 mt-2">{job?.company}</p>
+      <p className="text-xl text-gray-600 mt-2">{job.company}</p>
 
       <div className="mt-6 border-t pt-4">
         <h3 className="font-semibold text-lg text-gray-800">Job Location</h3>
         <p className="text-gray-700 mt-2 leading-relaxed">
-          {job?.location}
+          {job.location}
         </p>
       </div>
       <div>
         <h3 className="font-semibold text-lg text-gray-800">Salary</h3>
         <p className="text-gray-700 mt-2 leading-relaxed">
-          {`${job?.salaryMin} - ${job?.salaryMax}`}
+          {`${job.salaryMin} - ${job.salaryMax}`}
         </p>
       </div>
 
       <div>
-        <button onClick={() => navigate("/application")}>Apply here</button>
+        <h3 className="font-semibold text-lg text-gray-800">Description</h3>
+        <p className="text-gray-700 mt-2 leading-relaxed">{job.description}</p>
+      </div>
+
+      <div>
+        <button className="border rounded shadow-md ml-60" onClick={() => navigate("/application")}>Apply here</button>
       </div>
     </div>
   );
