@@ -1,4 +1,4 @@
-import { useJob } from "@/hooks/useJob";
+import { useJob } from "@/features/jobs/hooks/useJob";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import FullScreenLoader from "./FullScreenLoader";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";

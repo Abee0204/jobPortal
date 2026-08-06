@@ -18,11 +18,7 @@ export interface Job {
 
   skills: string;
 
-  experienceLevel:
-    | "FRESHER"
-    | "MID"
-    | "SENIOR"
-    | "LEAD";
+  experienceLevel: "FRESHER" | "MID" | "SENIOR" | "LEAD";
 
   applicationDeadline: string | null;
 

@@ -7,5 +7,6 @@ export const useCurrentUser = () => {
         queryKey: ["currentUser"],
         queryFn: authService.getCurrentUser,
         enabled: !!getToken(),
+        retry:false,
     });
 };

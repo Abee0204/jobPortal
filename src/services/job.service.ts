@@ -1,5 +1,6 @@
+import type { CreateJobFormData } from "@/features/jobs/schemas/job.schema";
 import { api } from "./api";
-import type { Job } from "@/types/job.types";
+import type {  Job } from "@/types/job.types";
 
 export const jobService = {
     async getAllJobs(): Promise<Job[]> {
@@ -19,4 +20,10 @@ export const jobService = {
 
         return response.data.data.myJobs;
     },
+
+    createJob: async(data: CreateJobFormData):Promise<Job> => {
+        const response = await api.post("/jobs" ,data);
+
+        return response.data.data.job;
+    }
 };

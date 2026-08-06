@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import JobCard from "../features/jobs/componentes/JobCard";
 
-import { useJobs } from "@/hooks/useJobs";
+import { useJobs } from "@/features/jobs/hooks/useJobs";
 import FullScreenLoader from "./FullScreenLoader";
 const JobsPage = () => {
 

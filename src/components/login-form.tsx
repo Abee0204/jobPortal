@@ -45,10 +45,10 @@ export function LoginForm({
       onSuccess: (response) => {
         setToken(response.token);
         form.reset();
-        toast.success("Login successful", {
+        navigate("/dashboard");
+         toast.success("Login successful", {
           position: "top-center",
         });
-        navigate("/dashboard");
       },
 
       onError: (error) => {

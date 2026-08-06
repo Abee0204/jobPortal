@@ -1,10 +1,9 @@
+import { CreateJobForm } from "@/features/jobs/componentes/createJobForm"
 
 
 const CreateJob = () => {
   return (
-    <div>
-      CREATE JOB
-    </div>
+    <CreateJobForm />
   )
 }
 

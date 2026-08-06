@@ -1,5 +1,5 @@
 
-const TOKEN_KEY = "";
+const TOKEN_KEY = "hirehub_token";
 
 export const setToken = (token: string) => {
   localStorage.setItem(TOKEN_KEY, token);
