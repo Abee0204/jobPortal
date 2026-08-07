@@ -1,4 +1,4 @@
-import { CreateJobForm } from "@/features/jobs/componentes/createJobForm"
+import { CreateJobForm } from "@/features/jobs/components/createJobForm"
 
 
 const CreateJob = () => {

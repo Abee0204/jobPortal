@@ -1,10 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import {
-  createJobSchema,
-  type CreateJobData,
-  type CreateJobFormInput,
-} from "../schemas/job.schema";
+import { type CreateJobData } from "../schemas/job.schema";
 import { CardContent } from "@/components/ui/card";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -16,45 +10,75 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  createJobSchema,
+  type CreateJobFormInput,
+} from "../schemas/job.schema";
+import { useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { useNavigate } from "react-router-dom";
-import { useCreateJob } from "../hooks/useCreateJob";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { useJob } from "../hooks/useJob";
+import { useUpdateJob } from "../hooks/useUpdateJob";
 
-export function CreateJobForm() {
+export function EditJobForm({ jobId }: { jobId: string }) {
+ if (!jobId) return <h1>Invalid Job</h1>;
+
   const form = useForm<CreateJobFormInput, unknown, CreateJobData>({
     resolver: zodResolver(createJobSchema),
-    defaultValues: {
-      title: "",
-      company: "",
-      description: "",
-      location: "",
-      employmentType: "FULL_TIME",
-      salaryMin: undefined,
-      salaryMax: undefined,
-      salaryCurrency: "INR",
-      skills: "",
-      experienceLevel: "FRESHER",
-      applicationDeadline: null,
-    },
   });
 
+  const { data: job, isLoading } = useJob(jobId);
+
   const navigate = useNavigate();
-  const createJobMutation = useCreateJob();
+
+  const updateJobMutation = useUpdateJob();
+
   const onSubmit = (data: CreateJobData) => {
-    createJobMutation.mutate(data, {
-      onSuccess: () => {
-        toast.success("Job created successfully");
-        form.reset();
-        navigate("/my-jobs");
+    updateJobMutation.mutate(
+      { jobId, data },
+      {
+        onSuccess: () => {
+          toast.success("Job updated successfully");
+          navigate("/jobs");
+        },
+        onError: (error: any) => {
+          const res = error?.response?.data;
+
+          let message = "Something went wrong";
+
+          if (res?.message) {
+            message = res.message;
+          } else if (res?.errors) {
+            const firstKey = Object.keys(res.errors)[0];
+            const firstError = res.errors[firstKey];
+
+            if (Array.isArray(firstError)) {
+              message = firstError[0];
+            }
+          }
+
+          toast.error(message);
+        },
       },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    });
+    );
   };
 
+  useEffect(() => {
+    if (job) {
+      form.reset({
+        ...job,
+        skills: Array.isArray(job.skills) ? job.skills.join(", ") : job.skills,
+        applicationDeadline: job.applicationDeadline
+          ? job.applicationDeadline.split("T")[0]
+          : null,
+      });
+    }
+  }, [job]);
+  if (isLoading) return <h1>Loading...</h1>;
   return (
     <CardContent>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -119,7 +143,7 @@ export function CreateJobForm() {
               onValueChange={(value) =>
                 form.setValue(
                   "employmentType",
-                  value as CreateJobFormData["employmentType"],
+                  value as CreateJobData["employmentType"],
                 )
               }
             >
@@ -149,7 +173,7 @@ export function CreateJobForm() {
               onValueChange={(value) =>
                 form.setValue(
                   "experienceLevel",
-                  value as CreateJobFormData["experienceLevel"],
+                  value as CreateJobData["experienceLevel"],
                 )
               }
             >
@@ -241,9 +265,9 @@ export function CreateJobForm() {
         <Button
           type="submit"
           className="mt-6 w-full"
-          disabled={createJobMutation.isPending}
+          disabled={updateJobMutation.isPending}
         >
-          {createJobMutation.isPending ? "Creating..." : "Create Job"}
+          {updateJobMutation.isPending ? "Updating..." : "Update Job"}
         </Button>
       </form>
     </CardContent>

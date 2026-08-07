@@ -1,29 +1,37 @@
-import type { CreateJobFormData } from "@/features/jobs/schemas/job.schema";
+import type {
+  CreateJobData,
+  CreateJobFormData,
+} from "@/features/jobs/schemas/job.schema";
 import { api } from "./api";
-import type {  Job } from "@/types/job.types";
+import type { Job } from "@/types/job.types";
 
 export const jobService = {
-    async getAllJobs(): Promise<Job[]> {
-        const response = await api.get("/jobs");
+  async getAllJobs(): Promise<Job[]> {
+    const response = await api.get("/jobs");
 
-        return response.data.data.jobs;
-    },
+    return response.data.data.jobs;
+  },
 
-    async getJobById(jobId :string): Promise<Job> {
-        const response = await api.get(`/jobs/${jobId}`);
+  async getJobById(jobId: string): Promise<Job> {
+    const response = await api.get(`/jobs/${jobId}`);
 
-        return response.data.data.job;
-    },
+    return response.data.data.job;
+  },
 
-    async getAllMyJobs ():Promise<Job[]> {
-        const response = await api.get("/jobs/my-jobs");
+  async getAllMyJobs(): Promise<Job[]> {
+    const response = await api.get("/jobs/my-jobs");
 
-        return response.data.data.myJobs;
-    },
+    return response.data.data.myJobs;
+  },
 
-    createJob: async(data: CreateJobFormData):Promise<Job> => {
-        const response = await api.post("/jobs" ,data);
+  createJob: async (data: CreateJobFormData): Promise<Job> => {
+    const response = await api.post("/jobs", data);
 
-        return response.data.data.job;
-    }
+    return response.data.data.job;
+  },
+
+  async updateJob(jobId: string, data: CreateJobData) {
+    const response = await api.patch(`/jobs/${jobId}`, data);
+    return response.data.data.job;
+  },
 };

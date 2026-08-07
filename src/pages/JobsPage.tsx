@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import JobCard from "../features/jobs/componentes/JobCard";
+import JobCard from "../features/jobs/components/JobCard";
 
 import { useJobs } from "@/features/jobs/hooks/useJobs";
 import FullScreenLoader from "./FullScreenLoader";

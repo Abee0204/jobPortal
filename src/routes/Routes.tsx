@@ -17,6 +17,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import RecruiterLayout from "../layouts/RecruiterLayout";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import PublicRoute from "@/components/PublicRoute";
+import EditJobPage from "@/pages/EditJobPage";
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +54,7 @@ export const router = createBrowserRouter([
       { path: "/recruiter/jobs", element: <RecruiterJob /> },
       { path: "/recruiter/jobs/new", element: <CreateJob /> },
       { path: "/recruiter/applicants", element: <ApplicantsPage /> },
+      { path: "/jobs/edit/:jobId", element: <EditJobPage /> },
     ],
   },
 ]);

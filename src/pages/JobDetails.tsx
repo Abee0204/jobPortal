@@ -73,7 +73,7 @@ const JobDetails = () => {
   )}
 
   {user?.role === "recruiter" && (
-    <button className="border rounded shadow-md ml-60" onClick={() => navigate("/")}> Edit Job</button>
+    <button className="border rounded shadow-md ml-60" onClick={() => navigate(`/jobs/edit/${job.id}`)}> Edit Job</button>
   )}
 </div>
     </div>
