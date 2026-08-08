@@ -5,6 +5,7 @@ import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useDeleteJob } from "@/features/jobs/hooks/useDeleteJob";
+import { useApplyJob } from "@/features/applications/hooks/useApplyJob";
 
 const JobDetails = () => {
   const { jobId } = useParams();
@@ -12,8 +13,10 @@ const JobDetails = () => {
   if (!jobId) {
     return <h1>Job not found</h1>;
   }
+  const { data: user } = useCurrentUser();
 
   const deleteJobMutation = useDeleteJob();
+  const { mutate, isPending } = useApplyJob();
 
   const handleDelete = (jobId: string) => {
     if (!window.confirm("Are you sure you want to delete this job?")) {
@@ -46,8 +49,6 @@ const JobDetails = () => {
   };
 
   const { data: job, isLoading, isError } = useJob(jobId);
-
-  const { data: user } = useCurrentUser();
 
   if (isLoading) return <FullScreenLoader />;
 
@@ -97,12 +98,13 @@ const JobDetails = () => {
         )}
 
         {user?.role === "candidate" && (
-          <button
+          <Button
             className="border rounded shadow-md ml-60"
-            onClick={() => navigate("/application")}
+            onClick={() => mutate(job.id)}
+            disabled={isPending}
           >
-            Apply Now
-          </button>
+            {isPending ? "Applying..." : "Apply Now"}
+          </Button>
         )}
 
         {user?.role === "recruiter" && (
@@ -111,7 +113,6 @@ const JobDetails = () => {
               className="border rounded shadow-md "
               onClick={() => navigate(`/jobs/edit/${job.id}`)}
             >
-              
               Edit Job
             </Button>
             <Button
