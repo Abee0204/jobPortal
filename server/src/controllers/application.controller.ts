@@ -23,10 +23,9 @@ export const applyForJob = async (req: Request<JobParams>, res: Response) => {
     const application = await applyForJobService(jobId, candidateId);
 
     return res.status(201).json({
+      success: true,
       message: "Applied successfully",
-      data: {
-        application,
-      },
+      data: { application },
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -47,20 +46,34 @@ export const getAllJobApplications = async (
   req: Request<JobParams>,
   res: Response,
 ) => {
-  const recruiterId = req.user.userId;
-  const jobId = req.params.jobId;
+  try {
+    const recruiterId = req.user.userId;
+    const jobId = req.params.jobId;
 
-  const allApplications = await getAllJobApplicationsService(
-    recruiterId,
-    jobId,
-  );
+    const allApplications = await getAllJobApplicationsService(
+      recruiterId,
+      jobId,
+    );
 
-  return res.status(200).json({
-    success: true,
-    data: {
-      allApplications,
-    },
-  });
+    return res.status(200).json({
+      success: true,
+      data: {
+        allApplications,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
 };
 
 export const getMyApplication = async (req: Request, res: Response) => {
@@ -100,18 +113,21 @@ export const updateApplicationStatus = async (
     const { status }: UpdateApplicationStatusData = req.body;
     const recruiterId = req.user.userId;
 
-    const updatedStatus = await updateApplicationStatusService(applicationId , recruiterId , status);
+    const updatedStatus = await updateApplicationStatusService(
+      applicationId,
+      recruiterId,
+      status,
+    );
 
     return res.status(200).json({
-      success:true,
-      message:"status updated",
-      data:{
+      success: true,
+      message: "status updated",
+      data: {
         updatedStatus,
       },
     });
-
   } catch (error) {
-     if (error instanceof Error) {
+    if (error instanceof Error) {
       return res.status(400).json({
         success: false,
         message: error.message,

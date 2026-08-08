@@ -1,6 +1,5 @@
 import type {
   CreateJobData,
-  CreateJobFormData,
 } from "@/features/jobs/schemas/job.schema";
 import { api } from "./api";
 import type { Job } from "@/types/job.types";
@@ -24,14 +23,19 @@ export const jobService = {
     return response.data.data.myJobs;
   },
 
-  createJob: async (data: CreateJobFormData): Promise<Job> => {
+  createJob: async (data: CreateJobData): Promise<Job> => {
     const response = await api.post("/jobs", data);
 
     return response.data.data.job;
   },
 
-  async updateJob(jobId: string, data: CreateJobData) {
+  updateJob: async (jobId: string, data: CreateJobData) => {
     const response = await api.patch(`/jobs/${jobId}`, data);
     return response.data.data.job;
   },
+
+  deleteJob: async (jobId: string): Promise<void> => {
+    await api.delete(`/jobs/${jobId}`);
+    return;
+  }
 };
