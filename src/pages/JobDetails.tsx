@@ -16,7 +16,7 @@ const JobDetails = () => {
   const { data: user } = useCurrentUser();
 
   const deleteJobMutation = useDeleteJob();
-  const { mutate, isPending } = useApplyJob();
+  const applyJobMutation = useApplyJob();
 
   const handleDelete = (jobId: string) => {
     if (!window.confirm("Are you sure you want to delete this job?")) {
@@ -26,6 +26,35 @@ const JobDetails = () => {
       onSuccess: () => {
         toast.success("Job deleted successfully");
         navigate("/jobs");
+      },
+      onError: (error: any) => {
+        const res = error?.response?.data;
+
+        let message = "Something went wrong";
+
+        if (res?.message) {
+          message = res.message;
+        } else if (res?.errors) {
+          const firstKey = Object.keys(res.errors)[0];
+          const firstError = res.errors[firstKey];
+
+          if (Array.isArray(firstError)) {
+            message = firstError[0];
+          }
+        }
+
+        toast.error(message);
+      },
+    });
+  };
+
+  const handleApply = (jobId: string) => {
+    applyJobMutation.mutate(jobId, {
+      onSuccess: () => {
+        toast.success("Applied Successfully");
+        setTimeout(() => {
+          navigate("/applications");
+        }, 500);
       },
       onError: (error: any) => {
         const res = error?.response?.data;
@@ -73,23 +102,30 @@ const JobDetails = () => {
         ← Back to all jobs
       </Link>
 
-      <h1 className="text-3xl font-bold mt-4">{job?.title}</h1>
-      <p className="text-xl text-gray-600 mt-2">{job.company}</p>
+      <div className="flex-col gap-4">
+        <h1 className="text-3xl font-bold">{job?.title}</h1>
+        <p className="text-xl text-gray-600 ">{job.company}</p>
 
-      <div className="mt-6 border-t pt-4">
-        <h3 className="font-semibold text-lg text-gray-800">Job Location</h3>
-        <p className="text-gray-700 mt-2 leading-relaxed">{job.location}</p>
-      </div>
-      <div>
-        <h3 className="font-semibold text-lg text-gray-800">Salary</h3>
-        <p className="text-gray-700 mt-2 leading-relaxed">
-          {`${job.salaryMin} - ${job.salaryMax}`}
-        </p>
-      </div>
+        <div className=" border-t ">
+          <h3 className="font-semibold text-lg text-gray-800">Job Location</h3>
+          <p className="text-black-700 leading-relaxed">{job.location}</p>
+        </div>
+        <div>
+          <h3 className="font-semibold text-lg text-gray-800">Salary</h3>
+          <p className="text-gray-700 leading-relaxed">
+            {`${job.salaryMin} - ${job.salaryMax}`}
+          </p>
+        </div>
 
-      <div>
-        <h3 className="font-semibold text-lg text-gray-800">Description</h3>
-        <p className="text-gray-700 mt-2 leading-relaxed">{job.description}</p>
+        <div>
+          <h3 className="font-semibold text-lg text-gray-800">Description</h3>
+          <p className="text-gray-700  leading-relaxed">{job.description}</p>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-lg text-gray-800">Location</h3>
+          <p className="text-gray-700  leading-relaxed">{job.location}</p>
+        </div>
       </div>
 
       <div>
@@ -100,10 +136,10 @@ const JobDetails = () => {
         {user?.role === "candidate" && (
           <Button
             className="border rounded shadow-md ml-60"
-            onClick={() => mutate(job.id)}
-            disabled={isPending}
+            onClick={() => handleApply(job.id)}
+            disabled={applyJobMutation.isPending}
           >
-            {isPending ? "Applying..." : "Apply Now"}
+            {applyJobMutation.isPending ? "Applying..." : "Apply Now"}
           </Button>
         )}
 
