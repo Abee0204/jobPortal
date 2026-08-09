@@ -1,12 +1,22 @@
-import type { ApplyJobResponse } from "@/types/application.types";
-import { api } from "./api"
+import type { Application, ApplyJobResponse } from "@/types/application.types";
+import { api } from "./api";
 
-
+type GetMyApplicationsResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    myApplication: Application[];
+  };
+};
 export const applicationService = {
+  async applyJob(jobId: string): Promise<ApplyJobResponse> {
+    const response = await api.post(`/jobs/${jobId}/apply`);
 
-    async applyJob(jobId: string):Promise<ApplyJobResponse>  {
-        const response = await api.post(`/jobs/${jobId}/apply`);
+    return response.data;
+  },
 
-        return response.data;
-    },
-}
+  async getMyApplications(): Promise<GetMyApplicationsResponse> {
+    const res = await api.get("/applications/my");
+    return res.data;
+  },
+};
