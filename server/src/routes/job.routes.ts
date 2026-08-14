@@ -15,7 +15,7 @@ router.patch("/:jobId",protect,authorize(Role.recruiter),validate(UpdateJobSchem
 router.get("/",getAllJobs);
 router.get("/my-jobs",protect,authorize(Role.recruiter),getAllMyJobs);
 router.get("/:jobId",getJobById);
-router.get("/:jobId/applications",protect,authorize(Role.recruiter),getAllJobApplications)
+router.get("/:jobId/applicants",protect,authorize(Role.recruiter),getAllJobApplications)
 
 router.delete("/:jobId",protect,authorize(Role.recruiter),deleteJobById);
 

@@ -6,17 +6,20 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useDeleteJob } from "@/features/jobs/hooks/useDeleteJob";
 import { useApplyJob } from "@/features/applications/hooks/useApplyJob";
+import { useMyApplication } from "@/features/applications/hooks/useMyApplications";
 
 const JobDetails = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
-  if (!jobId) {
-    return <h1>Job not found</h1>;
-  }
   const { data: user } = useCurrentUser();
 
   const deleteJobMutation = useDeleteJob();
   const applyJobMutation = useApplyJob();
+  const { data: myApplications } = useMyApplication();
+
+  if (!jobId) {
+    return <h1>Job not found</h1>;
+  }
 
   const handleDelete = (jobId: string) => {
     if (!window.confirm("Are you sure you want to delete this job?")) {
@@ -79,6 +82,9 @@ const JobDetails = () => {
 
   const { data: job, isLoading, isError } = useJob(jobId);
 
+  const applications = myApplications?.data?.myApplication || [];
+  const hasApplied = applications.some((app) => app.job?.id === jobId);
+
   if (isLoading) return <FullScreenLoader />;
 
   if (isError) {
@@ -137,9 +143,13 @@ const JobDetails = () => {
           <Button
             className="border rounded shadow-md ml-60"
             onClick={() => handleApply(job.id)}
-            disabled={applyJobMutation.isPending}
+            disabled={applyJobMutation.isPending || hasApplied}
           >
-            {applyJobMutation.isPending ? "Applying..." : "Apply Now"}
+            {applyJobMutation.isPending
+              ? "Applying..."
+              : hasApplied
+                ? "Already Applied"
+                : "Apply Now"}
           </Button>
         )}
 
@@ -157,6 +167,13 @@ const JobDetails = () => {
               disabled={deleteJobMutation.isPending}
             >
               Delete
+            </Button>
+
+            <Button
+              className="border rounded shadow-md "
+              onClick={() => navigate(`/jobs/${jobId}/applicants`)}
+            >
+            Applicants  
             </Button>
           </div>
         )}

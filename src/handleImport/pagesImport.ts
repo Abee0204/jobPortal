@@ -1,5 +1,5 @@
 import ApplicantsPage from "../pages/ApplicantsPage";
-import Application from "../pages/Application";
+import ApplicationPage from "../pages/ApplicationPage";
 import CreateJob from "../pages/CreateJob";
 import DashboardPage from "../pages/DashboardPage";
 import JobDetails from "../pages/JobDetails";
@@ -12,7 +12,7 @@ import RegisterPage from "../pages/RegisterPage";
 
 export {
   ApplicantsPage,
-  Application,
+  ApplicationPage,
   CreateJob,
   DashboardPage,
   JobDetails,

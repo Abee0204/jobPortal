@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import {
   ApplicantsPage,
-  Application,
+  ApplicationPage,
   CreateJob,
   DashboardPage,
   JobDetails,
@@ -42,7 +42,8 @@ export const router = createBrowserRouter([
         element: <DashboardLayout />,
         children: [
           { path: "/dashboard", element: <DashboardPage /> },
-          { path: "/application", element: <Application /> },
+          { path: "/application", element: <ApplicationPage /> },
+          { path: "/jobs/:jobId/applicants", element: <ApplicantsPage /> },
           { path: "/profile", element: <Profile /> },
         ],
       },
@@ -53,7 +54,6 @@ export const router = createBrowserRouter([
     children: [
       { path: "/recruiter/jobs", element: <RecruiterJob /> },
       { path: "/recruiter/jobs/new", element: <CreateJob /> },
-      { path: "/recruiter/applicants", element: <ApplicantsPage /> },
       { path: "/jobs/edit/:jobId", element: <EditJobPage /> },
     ],
   },

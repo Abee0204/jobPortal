@@ -1,9 +1,9 @@
 import { useMyApplication } from "@/features/applications/hooks/useMyApplications"
 import FullScreenLoader from "./FullScreenLoader";
 import { ApplicationCard } from "@/features/applications/components/ApplicationCard";
-import type { Application } from "@/types/application.types";
 
-const Application = () => {
+
+const ApplicationPage = () => {
   const { data, isLoading } = useMyApplication();
 
 if (isLoading) return <FullScreenLoader />;
@@ -17,4 +17,4 @@ return (
 );
 }
 
-export default Application
+export default ApplicationPage

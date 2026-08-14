@@ -16,7 +16,12 @@ export const applicationService = {
   },
 
   async getMyApplications(): Promise<GetMyApplicationsResponse> {
-    const res = await api.get("/applications/my");
-    return res.data;
+    const response = await api.get("/applications/my");
+    return response.data;
   },
+
+  async getJobApplications(jobId:string) {
+    const response = await api.get(`/jobs/${jobId}/applicants `);
+    return response.data;
+  }
 };
