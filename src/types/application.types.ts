@@ -1,16 +1,46 @@
 import type { Job } from "./job.types";
 
+export type ApplicationStatus = "PENDING" | "REVIEWING" | "ACCEPTED" | "REJECTED";
+
 export type ApplyJobResponse = {
   success: boolean;
   message: string;
   data: {
-    applicationStatus: "PENDING" | "REVIEWING" | "ACCEPTED" | "REJECTED";
+    applicationStatus: ApplicationStatus;
   };
 };
 
 export interface Application {
   id: number;
-  status: "PENDING" | "REVIEWING" | "ACCEPTED" | "REJECTED";
-  job : Job;
+  status: ApplicationStatus;
+  job: Job;
   userId: number;
+}
+
+export type Applicant = {
+  id: number;
+  status: ApplicationStatus;
+  jobId: string;
+  userId: number;
+  createdAt: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
 };
+
+export type GetMyApplicationsResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    myApplication: Application[];
+  };
+};
+
+export type GetJobApplicantsResponse = {
+  success: boolean;
+  data: {
+    allApplications: Applicant[];
+  };
+};
