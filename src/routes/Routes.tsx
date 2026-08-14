@@ -18,10 +18,12 @@ import RecruiterLayout from "../layouts/RecruiterLayout";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import PublicRoute from "@/components/PublicRoute";
 import EditJobPage from "@/pages/EditJobPage";
+import ErrorPage from "@/pages/ErrorPage";
 
 export const router = createBrowserRouter([
   {
     element: <PublicLayout />,
+    errorElement: <ErrorPage />,
     children: [
       { path: "/jobs", element: <JobsPage /> },
       { path: "/jobs/:jobId", element: <JobDetails /> },
@@ -37,6 +39,7 @@ export const router = createBrowserRouter([
   },
   {
     element: <ProtectedRoute />,
+    errorElement: <ErrorPage />,
     children: [
       {
         element: <DashboardLayout />,
@@ -47,14 +50,25 @@ export const router = createBrowserRouter([
           { path: "/profile", element: <Profile /> },
         ],
       },
+      {
+        element: <RecruiterLayout />,
+        children: [
+          { path: "/recruiter/jobs", element: <RecruiterJob /> },
+          { path: "/recruiter/jobs/new", element: <CreateJob /> },
+          { path: "/jobs/edit/:jobId", element: <EditJobPage /> },
+        ],
+      },
     ],
   },
+
   {
-    element: <RecruiterLayout />,
-    children: [
-      { path: "/recruiter/jobs", element: <RecruiterJob /> },
-      { path: "/recruiter/jobs/new", element: <CreateJob /> },
-      { path: "/jobs/edit/:jobId", element: <EditJobPage /> },
-    ],
+    path: "*",
+    element: (
+      <ErrorPage
+        code={404}
+        title="Page Not Found"
+        message="The page you are looking for doesn't exist."
+      />
+    ),
   },
 ]);

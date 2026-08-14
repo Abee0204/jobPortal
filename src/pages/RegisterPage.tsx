@@ -1,11 +1,13 @@
-import { SignupForm } from '@/components/signup-form'
+import { SignupForm } from "@/components/signup-form";
 
 const RegisterPage = () => {
   return (
-    <div>
-      <SignupForm className='p-30'/>
+    <div className="min-h-screen flex items-center justify-center px-4 py-20 mt-10 bg-slate-50/50 dark:bg-slate-950">
+      <div className="w-full max-w-md animate-in fade-in zoom-in-95 duration-200">
+        <SignupForm />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default RegisterPage
+export default RegisterPage;
