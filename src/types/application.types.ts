@@ -43,4 +43,19 @@ export type GetJobApplicantsResponse = {
   data: {
     allApplications: Applicant[];
   };
+};
+
+export type UpdateApplicationStatusResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    updatedStatus: {
+      id: number;
+      status: ApplicationStatus;
+      jobId: string;
+      userId: number;
+      createdAt: string;
+      updatedAt: string;
+    };
+  };
 };

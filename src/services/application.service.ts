@@ -2,6 +2,8 @@ import type {
   ApplyJobResponse,
   GetMyApplicationsResponse,
   GetJobApplicantsResponse,
+  ApplicationStatus,
+  UpdateApplicationStatusResponse,
 } from "@/types/application.types";
 import { api } from "./api";
 
@@ -21,5 +23,16 @@ export const applicationService = {
     const response = await api.get(`/jobs/${jobId}/applicants`);
     return response.data;
   },
+
+  async updateApplicationStatus(
+    applicationId: number,
+    status: ApplicationStatus
+  ): Promise<UpdateApplicationStatusResponse> {
+    const response = await api.patch(`/applications/${applicationId}`, {
+      status,
+    });
+    return response.data;
+  },
 };
+
 
