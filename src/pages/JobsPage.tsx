@@ -1,12 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import JobCard from "../features/jobs/components/JobCard";
 import { useJobs } from "@/features/jobs/hooks/useJobs";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import FullScreenLoader from "./FullScreenLoader";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Search, SlidersHorizontal, MapPin, Briefcase } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 const JobsPage = () => {
+  const { data: user } = useCurrentUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && user.role === "recruiter") {
+      navigate("/recruiter/jobs", { replace: true });
+    }
+  }, [user, navigate]);
+
   const { data: jobs, isLoading, isError } = useJobs();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string>("ALL");

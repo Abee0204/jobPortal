@@ -8,6 +8,7 @@ import LandingPage from "../pages/LandingPage";
 import LoginPage from "../pages/LoginPage";
 import Profile from "../pages/Profile";
 import RecruiterJob from "../pages/RecruiterJob";
+import RecruiterDashboardPage from "../pages/RecruiterDashboardPage";
 import RegisterPage from "../pages/RegisterPage";
 
 export {
@@ -21,5 +22,6 @@ export {
   LoginPage,
   Profile,
   RecruiterJob,
+  RecruiterDashboardPage,
   RegisterPage,
-} ;
+};

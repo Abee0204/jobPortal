@@ -1,5 +1,5 @@
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
-import { User, Mail, ShieldCheck, Briefcase, Calendar, ArrowLeft } from "lucide-react";
+import { Mail, ShieldCheck, Briefcase, ArrowLeft } from "lucide-react";
 import FullScreenLoader from "./FullScreenLoader";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";

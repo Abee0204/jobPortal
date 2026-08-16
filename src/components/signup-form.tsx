@@ -33,6 +33,7 @@ import {
 import { setToken } from "@/utils/token";
 import { useRegister } from "@/features/auth/hooks/useRegister";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
@@ -48,16 +49,23 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   });
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const signUpMutation = useRegister();
   const onSubmit = (data: RegisterFormData) => {
     signUpMutation.mutate(data, {
-      onSuccess: (response) => {
+      onSuccess: (response: any) => {
         setToken(response.token);
         form.reset();
+        queryClient.invalidateQueries({ queryKey: ["currentUser"] });
         toast.success("Registration successful", {
           position: "top-center",
         });
-        navigate("/dashboard");
+        const userRole = data.role || response?.data?.user?.role;
+        if (userRole === "recruiter") {
+          navigate("/recruiter/dashboard");
+        } else {
+          navigate("/dashboard");
+        }
       },
       onError: (error) => {
         if (axios.isAxiosError(error)) {

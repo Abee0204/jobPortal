@@ -24,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { setToken } from "@/utils/token";
 import { useLogin } from "@/features/auth/hooks/useLogin";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 export function LoginForm({
@@ -39,21 +40,29 @@ export function LoginForm({
   });
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const loginMutation = useLogin();
   const onSubmit = (data: LoginFormData) => {
     loginMutation.mutate(data, {
-      onSuccess: (response) => {
+      onSuccess: (response: any) => {
         setToken(response.token);
         form.reset();
-        navigate("/dashboard");
-         toast.success("Login successful", {
+        queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+        toast.success("Login successful", {
           position: "top-center",
         });
+        const userRole = response?.data?.user?.role || response?.user?.role;
+        if (userRole === "recruiter") {
+          navigate("/recruiter/dashboard");
+        } else {
+          navigate("/dashboard");
+        }
       },
 
       onError: (error) => {
         if (axios.isAxiosError(error)) {
-          toast.error( "Something went wrong", {
+          const message = error.response?.data?.message || "Something went wrong";
+          toast.error(message, {
             position: "top-center",
           });
           return;

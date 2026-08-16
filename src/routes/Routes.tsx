@@ -10,12 +10,14 @@ import {
   LoginPage,
   Profile,
   RecruiterJob,
+  RecruiterDashboardPage,
   RegisterPage,
 } from "../handleImport/pagesImport";
 import PublicLayout from "../layouts/PublicLayout";
 import DashboardLayout from "../layouts/DashboardLayout";
 import RecruiterLayout from "../layouts/RecruiterLayout";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import RoleRoute from "@/components/RoleRoute";
 import PublicRoute from "@/components/PublicRoute";
 import EditJobPage from "@/pages/EditJobPage";
 import ErrorPage from "@/pages/ErrorPage";
@@ -42,20 +44,32 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        element: <DashboardLayout />,
+        element: <RoleRoute allowedRoles={["candidate"]} />,
         children: [
-          { path: "/dashboard", element: <DashboardPage /> },
-          { path: "/application", element: <ApplicationPage /> },
-          { path: "/jobs/:jobId/applicants", element: <ApplicantsPage /> },
-          { path: "/profile", element: <Profile /> },
+          {
+            element: <DashboardLayout />,
+            children: [
+              { path: "/dashboard", element: <DashboardPage /> },
+              { path: "/application", element: <ApplicationPage /> },
+              { path: "/profile", element: <Profile /> },
+            ],
+          },
         ],
       },
       {
-        element: <RecruiterLayout />,
+        element: <RoleRoute allowedRoles={["recruiter"]} />,
         children: [
-          { path: "/recruiter/jobs", element: <RecruiterJob /> },
-          { path: "/recruiter/jobs/new", element: <CreateJob /> },
-          { path: "/jobs/edit/:jobId", element: <EditJobPage /> },
+          {
+            element: <RecruiterLayout />,
+            children: [
+              { path: "/recruiter/dashboard", element: <RecruiterDashboardPage /> },
+              { path: "/recruiter/jobs", element: <RecruiterJob /> },
+              { path: "/jobs/:jobId/applicants", element: <ApplicantsPage /> },
+              { path: "/recruiter/jobs/new", element: <CreateJob /> },
+              { path: "/jobs/edit/:jobId", element: <EditJobPage /> },
+              { path: "/recruiter/profile", element: <Profile /> },
+            ],
+          },
         ],
       },
     ],
