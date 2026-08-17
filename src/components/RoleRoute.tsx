@@ -26,7 +26,7 @@ const RoleRoute = ({ allowedRoles }: RoleRouteProps) => {
   }
 
   if (!allowedRoles.includes(user.role)) {
-    // Strictly enforce that recruiter cannot access candidate routes and vice-versa
+    // Strictly enforce role route boundaries
     const fallbackPath =
       user.role === "recruiter" ? "/recruiter/dashboard" : "/dashboard";
     return <Navigate to={fallbackPath} replace />;

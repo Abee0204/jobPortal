@@ -1,48 +1,14 @@
 import type { Job } from "@/types/job.types";
 import { MapPin, Briefcase, DollarSign, Calendar, ArrowRight } from "lucide-react";
+import {
+  getEmploymentTypeLabel,
+  getExperienceLevelLabel,
+  formatCurrency,
+  timeAgo,
+} from "@/features/jobs/utils/job.helpers";
 
 type JobCardProps = {
   job: Job;
-};
-
-const getEmploymentTypeLabel = (type: string) => {
-  switch (type) {
-    case "FULL_TIME":
-      return "Full Time";
-    case "PART_TIME":
-      return "Part Time";
-    case "CONTRACT":
-      return "Contract";
-    case "INTERNSHIP":
-      return "Internship";
-    case "FREELANCE":
-      return "Freelance";
-    default:
-      return type;
-  }
-};
-
-const getExperienceLevelLabel = (level: string) => {
-  switch (level) {
-    case "FRESHER":
-      return "Fresher";
-    case "MID":
-      return "Mid Level";
-    case "SENIOR":
-      return "Senior Level";
-    case "LEAD":
-      return "Lead Level";
-    default:
-      return level;
-  }
-};
-
-const formatCurrency = (amount: number, currency: string) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currency || "USD",
-    maximumFractionDigits: 0,
-  }).format(amount);
 };
 
 export default function JobCard({ job }: JobCardProps) {
@@ -53,17 +19,6 @@ export default function JobCard({ job }: JobCardProps) {
           job.salaryCurrency
         )}`
       : "Salary not disclosed";
-
-  const timeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays <= 1) return "Today";
-    if (diffDays === 2) return "Yesterday";
-    return `${diffDays} days ago`;
-  };
 
   return (
     <div className="group relative flex flex-col justify-between rounded-2xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md hover:border-slate-200/80 transition-all duration-300 dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-slate-700/80">

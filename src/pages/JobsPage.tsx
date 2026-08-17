@@ -63,7 +63,7 @@ const JobsPage = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 mt-24 space-y-8 animate-in fade-in duration-300">
+    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8 animate-in fade-in duration-300">
       {/* Header and Summary */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-6">
         <div>
