@@ -42,7 +42,7 @@ export function EditJobForm({ jobId }: { jobId: string }) {
       {
         onSuccess: () => {
           toast.success("Job updated successfully");
-          navigate(`/jobs/${jobId}`); // Redirect back to the job details page
+          navigate(`/jobs/${jobId}/applicants`); // Redirect to job applicants page
         },
         onError: (error: any) => {
           const res = error?.response?.data;
