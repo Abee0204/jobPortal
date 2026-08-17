@@ -117,7 +117,7 @@ const Navbar = () => {
                   </>
                 )}
 
-                <NavLink to="/profile" className={navLinkClass}>
+                <NavLink to={isRecruiter ? "/recruiter/profile" : "/profile"} className={navLinkClass}>
                   Profile
                 </NavLink>
 
@@ -217,7 +217,7 @@ const Navbar = () => {
                 )}
 
                 <NavLink
-                  to="/profile"
+                  to={isRecruiter ? "/recruiter/profile" : "/profile"}
                   onClick={() => setIsOpen(false)}
                   className={mobileNavLinkClass}
                 >

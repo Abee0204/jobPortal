@@ -14,7 +14,7 @@ const ApplicationPage = () => {
   const applications = data?.data?.myApplication || [];
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 mt-24 space-y-8 animate-in fade-in duration-300">
+    <div className="max-w-4xl mx-auto px-4 py-8 space-y-8 animate-in fade-in duration-300">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-6">
         <div>

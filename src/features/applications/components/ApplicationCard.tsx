@@ -1,6 +1,7 @@
 import type { Application } from "@/types/application.types";
 import { Building2, MapPin, DollarSign, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { formatCurrency } from "@/features/jobs/utils/job.helpers";
 
 type ApplicationDetails = {
   application: Application;
@@ -17,14 +18,6 @@ const getStatusStyles = (status: string) => {
     default:
       return "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950/30 dark:text-yellow-400 dark:border-yellow-900/50";
   }
-};
-
-const formatCurrency = (amount: number, currency: string) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currency || "USD",
-    maximumFractionDigits: 0,
-  }).format(amount);
 };
 
 export const ApplicationCard = ({ application }: ApplicationDetails) => {

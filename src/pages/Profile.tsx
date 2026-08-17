@@ -24,7 +24,7 @@ const Profile = () => {
   const isRecruiter = user.role === "recruiter";
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 mt-24 space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-3xl mx-auto px-4 py-8 space-y-6 animate-in fade-in duration-300">
       {/* Back button */}
       <button
         onClick={() => navigate(-1)}

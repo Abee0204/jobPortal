@@ -8,6 +8,12 @@ import { useDeleteJob } from "@/features/jobs/hooks/useDeleteJob";
 import { useApplyJob } from "@/features/applications/hooks/useApplyJob";
 import { useMyApplication } from "@/features/applications/hooks/useMyApplications";
 import {
+  getEmploymentTypeLabel,
+  getExperienceLevelLabel,
+  formatCurrency,
+  formatDate,
+} from "@/features/jobs/utils/job.helpers";
+import {
   MapPin,
   Briefcase,
   DollarSign,
@@ -20,46 +26,6 @@ import {
   Clock,
   Building,
 } from "lucide-react";
-
-const getEmploymentTypeLabel = (type: string) => {
-  switch (type) {
-    case "FULL_TIME":
-      return "Full Time";
-    case "PART_TIME":
-      return "Part Time";
-    case "CONTRACT":
-      return "Contract";
-    case "INTERNSHIP":
-      return "Internship";
-    case "FREELANCE":
-      return "Freelance";
-    default:
-      return type;
-  }
-};
-
-const getExperienceLevelLabel = (level: string) => {
-  switch (level) {
-    case "FRESHER":
-      return "Fresher";
-    case "MID":
-      return "Mid Level";
-    case "SENIOR":
-      return "Senior Level";
-    case "LEAD":
-      return "Lead Level";
-    default:
-      return level;
-  }
-};
-
-const formatCurrency = (amount: number, currency: string) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currency || "USD",
-    maximumFractionDigits: 0,
-  }).format(amount);
-};
 
 const JobDetails = () => {
   const { jobId } = useParams();
@@ -112,7 +78,7 @@ const JobDetails = () => {
       onSuccess: () => {
         toast.success("Applied Successfully");
         setTimeout(() => {
-          navigate("/application"); // Fixed redirect path from '/applications' to '/application'
+          navigate("/application"); 
         }, 500);
       },
       onError: (error: any) => {
@@ -166,16 +132,8 @@ const JobDetails = () => {
         )}`
       : "Salary not disclosed";
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
-
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 mt-24 space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-6xl mx-auto px-4 py-8 space-y-6 animate-in fade-in duration-300">
       {/* Back Link */}
       <button
         onClick={() => navigate(-1)}

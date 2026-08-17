@@ -1,32 +1,31 @@
 import { createBrowserRouter } from "react-router-dom";
-import {
-  ApplicantsPage,
-  ApplicationPage,
-  CreateJob,
-  DashboardPage,
-  JobDetails,
-  JobsPage,
-  LandingPage,
-  LoginPage,
-  Profile,
-  RecruiterJob,
-  RegisterPage,
-} from "../handleImport/pagesImport";
+import ApplicantsPage from "@/pages/ApplicantsPage";
+import ApplicationPage from "@/pages/ApplicationPage";
+import CreateJob from "@/pages/CreateJob";
+import DashboardPage from "@/pages/DashboardPage";
+import JobDetails from "@/pages/JobDetails";
+import JobsPage from "@/pages/JobsPage";
+import LandingPage from "@/pages/LandingPage";
+import LoginPage from "@/pages/LoginPage";
+import Profile from "@/pages/Profile";
+import RecruiterJob from "@/pages/RecruiterJob";
+import RecruiterDashboardPage from "@/pages/RecruiterDashboardPage";
+import RegisterPage from "@/pages/RegisterPage";
+import EditJobPage from "@/pages/EditJobPage";
+import ErrorPage from "@/pages/ErrorPage";
+
 import PublicLayout from "../layouts/PublicLayout";
 import DashboardLayout from "../layouts/DashboardLayout";
 import RecruiterLayout from "../layouts/RecruiterLayout";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import RoleRoute from "@/components/RoleRoute";
 import PublicRoute from "@/components/PublicRoute";
-import EditJobPage from "@/pages/EditJobPage";
-import ErrorPage from "@/pages/ErrorPage";
 
 export const router = createBrowserRouter([
   {
     element: <PublicLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "/jobs", element: <JobsPage /> },
-      { path: "/jobs/:jobId", element: <JobDetails /> },
       {
         element: <PublicRoute />,
         children: [
@@ -42,20 +41,34 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        element: <DashboardLayout />,
+        element: <RoleRoute allowedRoles={["candidate"]} />,
         children: [
-          { path: "/dashboard", element: <DashboardPage /> },
-          { path: "/application", element: <ApplicationPage /> },
-          { path: "/jobs/:jobId/applicants", element: <ApplicantsPage /> },
-          { path: "/profile", element: <Profile /> },
+          {
+            element: <DashboardLayout />,
+            children: [
+              { path: "/dashboard", element: <DashboardPage /> },
+              { path: "/jobs", element: <JobsPage /> },
+              { path: "/jobs/:jobId", element: <JobDetails /> },
+              { path: "/application", element: <ApplicationPage /> },
+              { path: "/profile", element: <Profile /> },
+            ],
+          },
         ],
       },
       {
-        element: <RecruiterLayout />,
+        element: <RoleRoute allowedRoles={["recruiter"]} />,
         children: [
-          { path: "/recruiter/jobs", element: <RecruiterJob /> },
-          { path: "/recruiter/jobs/new", element: <CreateJob /> },
-          { path: "/jobs/edit/:jobId", element: <EditJobPage /> },
+          {
+            element: <RecruiterLayout />,
+            children: [
+              { path: "/recruiter/dashboard", element: <RecruiterDashboardPage /> },
+              { path: "/recruiter/jobs", element: <RecruiterJob /> },
+              { path: "/recruiter/jobs/new", element: <CreateJob /> },
+              { path: "/jobs/edit/:jobId", element: <EditJobPage /> },
+              { path: "/jobs/:jobId/applicants", element: <ApplicantsPage /> },
+              { path: "/recruiter/profile", element: <Profile /> },
+            ],
+          },
         ],
       },
     ],

@@ -1,18 +1,43 @@
-import { Link, Outlet } from "react-router-dom";
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import FullScreenLoader from "@/pages/FullScreenLoader";
+import Navbar from "../components/common/Navbar";
+import { RecruiterSidebar } from "../components/common/RecruiterSidebar";
 
 const RecruiterLayout = () => {
+  const { data: user, isLoading, isError } = useCurrentUser();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  if (isLoading) return <FullScreenLoader />;
+
+  if (isError) return <h1 className="p-8 text-center text-rose-500 font-bold">Something went wrong</h1>;
+
   return (
-    <div>
-      <div>TopBar will update it later......</div>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
+      {/* Top Navbar */}
+      <Navbar />
 
-      <div className="left-sidebar flex flex-col gap-2 m-3">
-        <Link to={"/recruiter/jobs"}> Jobs</Link>
-        <Link to={"/recruiter/jobs/new"}>Create Job</Link>
-        <Link to={"/recruiter/applicants"}>Applicants</Link>
-      </div>
+      {/* Main Body */}
+      <div className="flex flex-1 pt-24">
+        {/* Recruiter Left Sidebar */}
+        <RecruiterSidebar
+          user={user}
+          isCollapsed={isCollapsed}
+          setIsCollapsed={setIsCollapsed}
+        />
 
-      <div className="right-main-content">
-        <Outlet />
+        {/* Main Content Area */}
+        <main
+          id="main-content"
+          className={`flex-1 transition-all duration-300 ${
+            isCollapsed ? "lg:pl-28" : "lg:pl-72"
+          }`}
+        >
+          <div className="p-4 md:p-8 max-w-7xl mx-auto">
+            <Outlet />
+          </div>
+        </main>
       </div>
     </div>
   );
