@@ -4,6 +4,7 @@ import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import FullScreenLoader from "@/pages/FullScreenLoader";
 import Navbar from "../components/common/Navbar";
 import { CandidateSidebar } from "../components/common/CandidateSidebar";
+import Footer from "../components/common/Footer";
 
 const DashboardLayout = () => {
   const { data: user, isLoading, isError } = useCurrentUser();
@@ -28,16 +29,16 @@ const DashboardLayout = () => {
         />
 
         {/* Main Content Area */}
-        <main
-          id="main-content"
-          className={`flex-1 transition-all duration-300 ${
+        <div
+          className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${
             isCollapsed ? "lg:pl-28" : "lg:pl-72"
           }`}
         >
-          <div className="p-4 md:p-8 max-w-7xl mx-auto">
+          <main id="main-content" className="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
             <Outlet />
-          </div>
-        </main>
+          </main>
+          <Footer role={user?.role} />
+        </div>
       </div>
     </div>
   );
