@@ -1,6 +1,6 @@
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import FullScreenLoader from "@/pages/FullScreenLoader";
-import { getToken, removeToken } from "@/utils/token";
+import { getToken } from "@/utils/token";
 import { Navigate, Outlet } from "react-router-dom";
 
 type RoleRouteProps = {
@@ -21,7 +21,7 @@ const RoleRoute = ({ allowedRoles }: RoleRouteProps) => {
   }
 
   if (isError || !user) {
-    removeToken();
+    
     return <Navigate to="/login" replace />;
   }
 

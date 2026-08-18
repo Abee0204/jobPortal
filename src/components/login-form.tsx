@@ -51,7 +51,7 @@ export function LoginForm({
         toast.success("Login successful", {
           position: "top-center",
         });
-        const userRole = response?.data?.user?.role || response?.user?.role;
+        const userRole = response?.data?.data?.user?.role || response?.user?.role;
         if (userRole === "recruiter") {
           navigate("/recruiter/dashboard");
         } else {
