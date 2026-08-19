@@ -17,6 +17,13 @@ type ApplicationParams = {
 
 export const applyForJob = async (req: Request<JobParams>, res: Response) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     const jobId = req.params.jobId;
     const candidateId = req.user.userId;
 
@@ -47,6 +54,13 @@ export const getAllJobApplications = async (
   res: Response,
 ) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     const recruiterId = req.user.userId;
     const jobId = req.params.jobId;
 
@@ -78,6 +92,13 @@ export const getAllJobApplications = async (
 
 export const getMyApplication = async (req: Request, res: Response) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     const candidateId = req.user.userId;
 
     const myApplication = await getMyApplicationService(candidateId);
@@ -109,6 +130,13 @@ export const updateApplicationStatus = async (
   res: Response,
 ) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     const applicationId = Number(req.params.applicationId);
     const { status }: UpdateApplicationStatusData = req.body;
     const recruiterId = req.user.userId;

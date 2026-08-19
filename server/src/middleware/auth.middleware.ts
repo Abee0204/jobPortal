@@ -1,6 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import type { JwtPayload } from "../types/auth.types.js";
 
 export const protect = (
   req: Request,
@@ -22,7 +21,7 @@ export const protect = (
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET!
-    ) as JwtPayload;
+    ) as { userId: number; email: string; role: "candidate" | "recruiter" };
 
     req.user = decoded;
 

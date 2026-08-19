@@ -11,6 +11,7 @@ import Profile from "@/pages/Profile";
 import RecruiterJob from "@/pages/RecruiterJob";
 import RecruiterDashboardPage from "@/pages/RecruiterDashboardPage";
 import RegisterPage from "@/pages/RegisterPage";
+import RecruiterJobDetails from "@/pages/RecruiterJobDetails";
 import EditJobPage from "@/pages/EditJobPage";
 import ErrorPage from "@/pages/ErrorPage";
 
@@ -64,6 +65,7 @@ export const router = createBrowserRouter([
               { path: "/recruiter/dashboard", element: <RecruiterDashboardPage /> },
               { path: "/recruiter/jobs", element: <RecruiterJob /> },
               { path: "/recruiter/jobs/new", element: <CreateJob /> },
+              { path: "/recruiter/jobs/:jobId", element: <RecruiterJobDetails /> },
               { path: "/jobs/edit/:jobId", element: <EditJobPage /> },
               { path: "/jobs/:jobId/applicants", element: <ApplicantsPage /> },
               { path: "/recruiter/profile", element: <Profile /> },

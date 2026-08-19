@@ -10,10 +10,21 @@ import {
   findJobById,
   setJobNotActive,
   findMyJobs,
- } from "../service/job.service.js";
+} from "../service/job.service.js";
+
+type JobParams = {
+  jobId: string;
+};
 
 export const createJob = async (req: Request, res: Response) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     if (req.user.role !== "recruiter") {
       return res.status(403).json({
         success: false,
@@ -47,6 +58,13 @@ export const createJob = async (req: Request, res: Response) => {
 
 export const updateJob = async (req: Request<JobParams>, res: Response) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     const jobId = req.params.jobId;
     const userId = req.user.userId;
 
@@ -106,10 +124,6 @@ export const getAllJobs = async (req: Request, res: Response) => {
   }
 };
 
-type JobParams = {
-  jobId: string;
-};
-
 export const getJobById = async (req: Request<JobParams>, res: Response) => {
   try {
     const jobId = req.params.jobId;
@@ -138,6 +152,13 @@ export const getJobById = async (req: Request<JobParams>, res: Response) => {
 
 export const deleteJobById = async (req: Request<JobParams>, res: Response) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     const jobId = req.params.jobId;
     const userId = req.user.userId;
 
@@ -166,6 +187,13 @@ export const deleteJobById = async (req: Request<JobParams>, res: Response) => {
 
 export const getAllMyJobs = async (req: Request, res: Response) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     const recruiterId = req.user.userId;
     const myJobs = await findMyJobs(recruiterId);
 
@@ -189,5 +217,3 @@ export const getAllMyJobs = async (req: Request, res: Response) => {
     });
   }
 };
-
-

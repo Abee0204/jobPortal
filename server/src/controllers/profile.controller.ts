@@ -7,6 +7,13 @@ import {
 
 export const getMyProfile = async (req: Request, res: Response) => {
   try {
+
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
     const userId = req.user?.userId;
 
     const user = await getMyProfileService(userId);
@@ -26,6 +33,14 @@ export const getMyProfile = async (req: Request, res: Response) => {
 
 export const updateProfile = async (req: Request, res: Response) => {
   try {
+
+     if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     const userId = req.user?.userId;
 
     const updatedUser = await updateProfileService(userId, req.body);
