@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 interface FooterProps {
   role?: string;
@@ -46,13 +47,13 @@ const Footer: React.FC<FooterProps> = ({ role }) => {
             </p>
             <div className="pt-2 flex items-center gap-3">
               <a
-                href="https://github.com"
+                href="https://github.com/Abee0204"
                 target="_blank"
                 rel="noreferrer"
                 className="p-2.5 rounded-xl border border-slate-100 bg-slate-50 text-slate-600 hover:text-primary hover:bg-primary/5 hover:border-primary/20 dark:bg-slate-800 dark:border-slate-700/60 dark:text-slate-300 dark:hover:text-primary transition-all cursor-pointer"
                 aria-label="GitHub"
               >
-                {/* <Github className="h-4 w-4" /> */}
+                <FaGithub className="h-4 w-4" />
               </a>
               <a
                 href="https://linkedin.com"
@@ -61,7 +62,7 @@ const Footer: React.FC<FooterProps> = ({ role }) => {
                 className="p-2.5 rounded-xl border border-slate-100 bg-slate-50 text-slate-600 hover:text-primary hover:bg-primary/5 hover:border-primary/20 dark:bg-slate-800 dark:border-slate-700/60 dark:text-slate-300 dark:hover:text-primary transition-all cursor-pointer"
                 aria-label="LinkedIn"
               >
-                {/* <Linkedin className="h-4 w-4" /> */}
+                <FaLinkedin className="h-4 w-4" />
               </a>
               <a
                 href="https://twitter.com"
@@ -70,7 +71,7 @@ const Footer: React.FC<FooterProps> = ({ role }) => {
                 className="p-2.5 rounded-xl border border-slate-100 bg-slate-50 text-slate-600 hover:text-primary hover:bg-primary/5 hover:border-primary/20 dark:bg-slate-800 dark:border-slate-700/60 dark:text-slate-300 dark:hover:text-primary transition-all cursor-pointer"
                 aria-label="Twitter"
               >
-                {/* <Twitter className="h-4 w-4" /> */}
+                <FaTwitter className="h-4 w-4" />
               </a>
             </div>
           </div>
