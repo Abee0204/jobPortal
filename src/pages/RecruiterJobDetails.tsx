@@ -1,11 +1,10 @@
+import { useState } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { useJob } from "@/features/jobs/hooks/useJob";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDeleteJob } from "@/features/jobs/hooks/useDeleteJob";
 import FullScreenLoader from "./FullScreenLoader";
-import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useApplyJob } from "@/features/applications/hooks/useApplyJob";
-import { useMyApplication } from "@/features/applications/hooks/useMyApplications";
 import {
   getEmploymentTypeLabel,
   getExperienceLevelLabel,
@@ -18,54 +17,57 @@ import {
   DollarSign,
   Calendar,
   ArrowLeft,
-  CheckCircle,
+  Trash2,
+  Edit,
+  Users,
   Clock,
   Building,
+  AlertTriangle,
+  Loader2,
+  X,
 } from "lucide-react";
 import axios from "axios";
 
-const JobDetails = () => {
-  const { jobId } = useParams();
+const RecruiterJobDetails = () => {
+  const { jobId } = useParams<{ jobId: string }>();
   const navigate = useNavigate();
-  const { data: user } = useCurrentUser();
-
-  const applyJobMutation = useApplyJob();
-  const { data: myApplications } = useMyApplication();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const { data: job, isLoading, isError } = useJob(jobId || "");
+  const deleteJobMutation = useDeleteJob();
 
   if (!jobId) {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center p-6 text-center">
         <h2 className="text-xl font-bold text-destructive">Job not found</h2>
-        <Link to="/jobs" className="text-primary hover:underline font-bold mt-2">
-          Back to Listings
-        </Link>
+        <Button
+          onClick={() => navigate("/recruiter/jobs")}
+          className="mt-4 rounded-xl font-bold"
+        >
+          Back to My Jobs
+        </Button>
       </div>
     );
   }
 
-  const handleApply = (jobId: string) => {
-    applyJobMutation.mutate(jobId, {
+  const handleConfirmDelete = () => {
+    deleteJobMutation.mutate(jobId, {
       onSuccess: () => {
-        toast.success("Applied Successfully", { position: "top-center" });
-        setTimeout(() => {
-          navigate("/application");
-        }, 500);
+        toast.success("Job deleted successfully", { position: "top-center" });
+        setIsDeleteDialogOpen(false);
+        navigate("/recruiter/jobs");
       },
       onError: (error: any) => {
         if (axios.isAxiosError(error)) {
-          const message = error.response?.data?.message || "Failed to submit application";
+          const message =
+            error.response?.data?.message || "Failed to delete job";
           toast.error(message, { position: "top-center" });
         } else {
-          toast.error("Failed to submit application", { position: "top-center" });
+          toast.error("Failed to delete job", { position: "top-center" });
         }
       },
     });
   };
-
-  const applications = myApplications?.data?.myApplication || [];
-  const hasApplied = applications.some((app) => app.job?.id === jobId);
 
   if (isLoading) return <FullScreenLoader />;
 
@@ -76,13 +78,13 @@ const JobDetails = () => {
         <p className="text-sm text-muted-foreground mt-1 max-w-sm">
           The requested job posting may have been removed or does not exist.
         </p>
-        <Link
-          to="/jobs"
-          className="text-primary hover:underline font-bold mt-3 flex items-center gap-1"
+        <Button
+          onClick={() => navigate("/recruiter/jobs")}
+          className="mt-4 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Listings
-        </Link>
+          Back to My Jobs
+        </Button>
       </div>
     );
   }
@@ -101,18 +103,18 @@ const JobDetails = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-6 animate-in fade-in duration-300">
-      {/* Back Link */}
+      {/* Back button to My Jobs */}
       <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary font-bold transition-colors cursor-pointer"
+        onClick={() => navigate("/recruiter/jobs")}
+        className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-primary transition-colors cursor-pointer"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
-        Back
+        Back to My Jobs
       </button>
 
       {/* Main Content Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        {/* Left Column: Details */}
+        {/* Left Column: Job Details */}
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white border border-slate-100 rounded-3xl p-6 md:p-8 space-y-6 shadow-sm dark:bg-slate-900/60 dark:border-slate-800">
             {/* Header info */}
@@ -173,7 +175,7 @@ const JobDetails = () => {
           </div>
         </div>
 
-        {/* Right Column: Floating Sidebar */}
+        {/* Right Column: Floating Sidebar Summary & Recruiter Actions */}
         <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-24">
           <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm dark:bg-slate-900/60 dark:border-slate-800 space-y-6">
             <h3 className="font-bold text-slate-900 dark:text-slate-100 border-b pb-3">
@@ -233,38 +235,109 @@ const JobDetails = () => {
               )}
             </div>
 
-            {/* Candidate CTA */}
+            {/* Recruiter Actions */}
             <div className="border-t pt-5 space-y-3">
-              {!user ? (
+              <h4 className="text-xs font-black uppercase text-muted-foreground tracking-wider mb-2">
+                Recruiter Actions
+              </h4>
+              <div className="flex flex-col gap-2.5">
                 <Button
-                  onClick={() => navigate("/login")}
-                  className="w-full py-5 rounded-2xl font-bold cursor-pointer"
+                  onClick={() => navigate(`/jobs/${jobId}/applicants`)}
+                  className="w-full py-5 rounded-2xl font-bold cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
                 >
-                  Login to Apply
+                  <Users className="h-4 w-4" />
+                  View Applicants
                 </Button>
-              ) : (
-                <Button
-                  className="w-full py-5 rounded-2xl font-bold cursor-pointer transition-all active:scale-95"
-                  onClick={() => handleApply(job.id)}
-                  disabled={applyJobMutation.isPending || hasApplied}
-                >
-                  {applyJobMutation.isPending ? (
-                    "Applying..."
-                  ) : hasApplied ? (
-                    <span className="flex items-center gap-1 justify-center">
-                      <CheckCircle className="h-4 w-4" /> Already Applied
-                    </span>
-                  ) : (
-                    "Apply Now"
-                  )}
-                </Button>
-              )}
+
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    variant="outline"
+                    className="py-5 rounded-2xl font-bold cursor-pointer flex items-center justify-center gap-1 dark:border-slate-800 dark:bg-slate-900"
+                    onClick={() => navigate(`/jobs/edit/${job.id}`)}
+                  >
+                    <Edit className="h-3.5 w-3.5" />
+                    Edit Job
+                  </Button>
+
+                  <Button
+                    variant="destructive"
+                    className="py-5 rounded-2xl font-bold cursor-pointer flex items-center justify-center gap-1"
+                    onClick={() => setIsDeleteDialogOpen(true)}
+                    disabled={deleteJobMutation.isPending}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Delete
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal Dialog */}
+      {isDeleteDialogOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 p-6 md:p-8 max-w-md w-full shadow-2xl space-y-6 relative">
+            <button
+              onClick={() => setIsDeleteDialogOpen(false)}
+              disabled={deleteJobMutation.isPending}
+              className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg transition-colors cursor-pointer"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-2xl bg-destructive/10 text-destructive flex items-center justify-center shrink-0">
+                <AlertTriangle className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-slate-100">
+                  Delete Job Posting
+                </h3>
+                <p className="text-xs font-semibold text-muted-foreground mt-0.5">
+                  This action cannot be undone.
+                </p>
+              </div>
+            </div>
+
+            <p className="text-sm font-medium text-slate-600 dark:text-slate-300 leading-relaxed">
+              Are you sure you want to delete <span className="font-bold text-slate-900 dark:text-slate-100">&quot;{job.title}&quot;</span>? All associated application data will be permanently removed.
+            </p>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Button
+                variant="outline"
+                onClick={() => setIsDeleteDialogOpen(false)}
+                disabled={deleteJobMutation.isPending}
+                className="rounded-xl font-bold cursor-pointer"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleConfirmDelete}
+                disabled={deleteJobMutation.isPending}
+                className="rounded-xl font-bold flex items-center gap-2 cursor-pointer shadow-md shadow-destructive/20"
+              >
+                {deleteJobMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4" />
+                    <span>Confirm Delete</span>
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default JobDetails;
+export default RecruiterJobDetails;

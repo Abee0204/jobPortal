@@ -144,6 +144,7 @@ const JobsPage = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {filteredJobs.map((job) => (
+            
             <Link key={job.id} to={`/jobs/${job.id}`} className="block">
               <JobCard job={job} />
             </Link>

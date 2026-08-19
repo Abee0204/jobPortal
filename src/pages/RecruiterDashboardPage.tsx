@@ -170,7 +170,7 @@ const RecruiterDashboardPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {jobsList.slice(0, 4).map((job) => (
-              <Link key={job.id} to={`/jobs/${job.id}/applicants`} className="block">
+              <Link key={job.id} to={`/recruiter/jobs/${job.id}`} className="block">
                 <JobCard job={job} />
               </Link>
             ))}
