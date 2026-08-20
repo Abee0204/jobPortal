@@ -1,7 +1,7 @@
 import { useMyApplication } from "@/features/applications/hooks/useMyApplications";
 import FullScreenLoader from "./FullScreenLoader";
 import { ApplicationCard } from "@/features/applications/components/ApplicationCard";
-import { Briefcase, Sliders } from "lucide-react";
+import { Briefcase} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 

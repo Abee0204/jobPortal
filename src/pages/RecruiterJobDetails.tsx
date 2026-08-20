@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useJob } from "@/features/jobs/hooks/useJob";
 import { useDeleteJob } from "@/features/jobs/hooks/useDeleteJob";
 import FullScreenLoader from "./FullScreenLoader";
